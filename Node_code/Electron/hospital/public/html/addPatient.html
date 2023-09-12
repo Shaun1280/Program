@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="stylesheet" href="../materialize/css/materialize.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="../css/style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>添加就诊人</title>
+    </head>
+<body>
+    <ul id="slide-out" class="side-nav fixed">
+        <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+            <li>
+              <a class="collapsible-header">导航<i class="material-icons">arrow_drop_down</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="../html/index.html">普通科室候诊</a></li> <!--option1-->
+                  <li><a href="../html/ultrasound_index.html">B 超室候诊</a></li>
+
+                  <ul class="collapsible collapsible-accordion"> <!--option2-->
+                    <li>
+                      <a class="collapsible-header">挂号<i class="material-icons">arrow_drop_down</i></a>
+                      <div class="collapsible-body">
+                        <ul>
+                          <li><a href="#!">添加就诊人</a></li>
+                          <li><a href="../html/randomAddPatient.html">随机添加</a></li>
+                        </ul>
+                      </div>
+                    </li>
+                  </ul>
+
+                  <li><a href="../html/department.html">科室</a></li> <!--option3-->
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </li>
+    </ul>
+    <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+
+    <main>
+        <div class="container">
+            <form class="col s12">
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="name" type="text" class="validate">
+                  <label for="name">姓名</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s6">
+                  <input id="age" type="text" class="validate">
+                  <label for="age">年龄</label>
+                </div>
+                <div class="input-field col s6">
+                  <select id="gender">
+                    <option value="" disabled selected>性别</option>
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="phoneNumber" type="text" class="validate">
+                  <label for="phoneNumber">电话号码</label>
+                </div>
+              </div>
+
+              <div class="input-field col s12">
+                <select id="department">
+                  <option value="" disabled selected>选择科室</option>
+                  <option value="1">科室 1</option>
+                  <option value="2">科室 2</option>
+                  <option value="3">科室 3</option>
+                  <option value="4">科室 4</option>
+                  <option value="5">科室 5</option>
+                  <option value="6">科室 6</option>
+                  <option value="7">科室 7</option>
+                  <option value="8">科室 8</option>
+                  <option value="9">科室 9</option>
+                  <option value="10">科室 10</option>
+                  <option value="11">科室 11</option>
+                  <option value="12">科室 12</option>
+                  <option value="13">科室 13</option>
+                  <option value="14">科室 14</option>
+                  <option value="15">科室 15</option>
+                </select>
+              </div>
+            
+
+              <button class="btn waves-effect waves-light" type="submit" name="action">提交
+                <i class="material-icons right">send</i>
+              </button>
+            </form>
+        </div>
+    </main>
+
+    <script src="../../node_modules/hammerjs/hammer.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="../materialize/js/materialize.min.js"></script>
+
+    <script type="module">
+        const electron = require('electron');
+        const { ipcRenderer } = electron;
+        const Patient = require("../js/classes/Patient.js")
+
+        $(".button-collapse").sideNav();
+        $(document).ready(function() {
+          $('select').material_select();
+        });
+
+        // 下为提交挂号信息并进行验证
+        document.querySelector("form").onsubmit = (e) => {
+          e.preventDefault();
+          let name = document.querySelector("#name").value;
+          if (name.length == 0) {
+            ipcRenderer.send("register:error-message", "请输入姓名");
+            return;
+          }
+
+          let age = parseInt(document.querySelector("#age").value);
+          if (isNaN(age) || !(0 <= age)) {
+            ipcRenderer.send("register:error-message", "请输入正确年龄");
+            return;
+          }
+
+          let gender= document.querySelector("#gender").value;
+          if (gender.length == 0) {
+            ipcRenderer.send("register:error-message", "请选择性别");
+            return;
+          }
+
+          let phone = document.querySelector("#phoneNumber").value;
+          let onlyDigit = true;
+          for (let i = 0; i < phone.length; i++)
+            if (!('0' <= phone[i] && phone[i] <= '9')) onlyDigit = false;
+          if (phone.length ==0 || phone.length > 11 || onlyDigit == false) {
+            ipcRenderer.send("register:error-message", "请输入正确电话号码");
+            return;
+          }
+
+          let department = parseInt(document.querySelector("#department").value);
+          if (isNaN(department) || department == 0) {
+            ipcRenderer.send("register:error-message", "请选择科室");
+            return;
+          }
+
+          ipcRenderer.send("patientlist:register", [new Patient("", name, age, gender, phone, department, -1, "")]);
+          ipcRenderer.send("register:success-message", "挂号成功");
+          document.querySelector("form").reset();
+        }
+    </script>
+
+  <script type="module">
+  const { remote, ipcRenderer } = require('electron');
+  const { FindInPage } = require('electron-find');
+  let findInPage = null;
+
+  ipcRenderer.removeAllListeners('page:find');
+  ipcRenderer.on('page:find', () => {
+    if (findInPage != null) findInPage.closeFindWindow(), findInPage.destroy();
+    findInPage = new FindInPage(remote.getCurrentWebContents(), {
+        preload: true,
+        offsetTop: 0,
+        offsetRight: 30
+    })
+    findInPage.openFindWindow();
+  })
+  </script>
+</body>
+</html>

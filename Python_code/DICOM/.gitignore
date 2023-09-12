@@ -1,0 +1,10 @@
+data
+jpg
+*.pt
+*.zip
+*.pyc
+dist
+build
+*.spec
+analyzer/res_seg
+analyzer/score

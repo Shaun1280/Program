@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="stylesheet" href="../materialize/css/materialize.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="../css/style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>历史就诊信息</title>
+    </head>
+<body>
+    <div class="container">
+        <table class="highlight bordered">
+            <caption class="centered"></caption>
+            <thead>
+                <tr>
+                    <th>就诊号</th>
+                    <th>姓名</th>
+                    <th>年龄</th>
+                    <th>性别</th>
+                    <th>电话号码</th>
+                    <th id="th_B">开具B超</th>
+                    <th>初诊时间</th>
+                    <th>结束时间</th>
+                </tr>
+            </thead>
+    
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        const { ipcRenderer } = require("electron");
+        window.onload = () => {
+            ipcRenderer.send("patientTalbe:load");
+        }
+        ipcRenderer.removeAllListeners("doctor:showHistoryPatientList");
+        ipcRenderer.on("doctor:showHistoryPatientList", (e, department, doctor, array) => {
+                let tbody = document.querySelector("tbody");
+                tbody.innerHTML = '';
+                if (department != 16) document.querySelector("caption").innerHTML = `科室-${department} doctor-${doctor}`;
+                else document.querySelector("caption").innerHTML = `B超室 doctor-${doctor}`;
+                if (department == 16) {
+                    if (document.querySelector("#th_B") != null) {
+                        document.querySelector("#th_B").remove();
+                    }
+                }
+                for (let i = 0; i < array.length; i++) {
+                      let tr = document.createElement("tr");
+                      let tdId = document.createElement("td");
+                      tdId.innerHTML = array[i].id;
+                      
+                      let tdName = document.createElement("td");
+                      tdName.innerHTML = array[i].name;
+                      
+                      let tdAge = document.createElement("td");
+                      tdAge.innerHTML = array[i].age;
+                      
+                      let tdGender = document.createElement("td");
+                      tdGender.innerHTML = array[i].gender;
+                      
+                      let tdPhone = document.createElement("td");
+                      tdPhone.innerHTML = array[i].phoneNumber;
+  
+                      let tdB = document.createElement("td");
+                      tdB.innerHTML = array[i].bTag == true ? "是" : "否";
+  
+                      let tdTreatmentTime = document.createElement("td");
+                      tdTreatmentTime.innerHTML = array[i].treatmentTime;
+                      if (department == 16) tdTreatmentTime.innerHTML = array[i].bTreatmentTime;
+  
+                      let tdEndTime= document.createElement("td");
+                      tdEndTime.innerHTML = array[i].endTime;
+                      if (department == 16) tdEndTime.innerHTML = array[i].bEndTime;
+  
+                      if (department != 16) tr.append(tdId, tdName, tdAge, tdGender, tdPhone, tdB, tdTreatmentTime, tdEndTime);
+                      else tr.append(tdId, tdName, tdAge, tdGender, tdPhone, tdTreatmentTime, tdEndTime);
+                      tbody.appendChild(tr);
+                  }
+              });
+    </script>
+    
+
+    <script type="module">
+        const { remote, ipcRenderer } = require('electron');
+        const { FindInPage } = require('electron-find');
+        let findInPage = null;
+  
+        ipcRenderer.removeAllListeners('page:find');
+        ipcRenderer.on('page:find', () => {
+          if (findInPage != null) findInPage.closeFindWindow(), findInPage.destroy();
+          findInPage = new FindInPage(remote.getCurrentWebContents(), {
+              preload: true,
+              offsetTop: 0,
+              offsetRight: 30
+          })
+          findInPage.openFindWindow();
+        })
+    </script>
+</body>
+</html>

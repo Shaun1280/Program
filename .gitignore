@@ -1,0 +1,13 @@
+ACM
+node_modules
+build
+data
+jpg
+Python_code/DICOM/*.pt
+Python_code/DICOM/*.zip
+Python_code/DICOM/*.pyc
+Python_code/DICOM/dist
+Python_code/DICOM/build
+Python_code/DICOM/*.spec
+Python_code/DICOM/analyzer/res_seg
+Python_code/DICOM/analyzer/score

@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "lib": ["es6", "DOM"],
+    "noImplicitAny": false, // 在表达式和声明上有隐含的'any'类型时报错, 最好之后改成true
+    "sourceMap": false,
+    "outDir": "public/js", // 输出目录
+    "baseUrl": ".",
+    // "strict": true,
+    // "strictNullChecks": true,
+    // "esModuleInterop": true,
+    // "forceConsistentCasingInFileNames": true,
+    // "declaration": true,
+    "paths": {
+      "*": [
+        "node_modules/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
+
+
+// {
+//   "compilerOptions": {
+//     "outDir": "./js",
+//     "module": "es2015",
+//     "target": "es6",
+//     "allowJs": true,
+//     "allowSyntheticDefaultImports": true
+//   }
+// }

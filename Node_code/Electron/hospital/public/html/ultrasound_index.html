@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../materialize/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B 超室候/就诊列表</title>
+</head>
+<body>
+    <ul id="slide-out" class="side-nav fixed">
+        <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+            <li>
+              <a class="collapsible-header">导航<i class="material-icons">arrow_drop_down</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="../html/index.html">普通科室候诊</a></li> <!--option1-->
+                  <li><a href="#!">B 超室候诊</a></li>
+
+                  <ul class="collapsible collapsible-accordion"> <!--option2-->
+                    <li>
+                      <a class="collapsible-header">挂号<i class="material-icons">arrow_drop_down</i></a>
+                      <div class="collapsible-body">
+                        <ul>
+                          <li><a href="../html/addPatient.html">添加就诊人</a></li>
+                          <li><a href="../html/randomAddPatient.html">随机添加</a></li>
+                        </ul>
+                      </div>
+                    </li>
+                  </ul>
+
+                  <li><a href="../html/department.html">科室</a></li> <!--option3-->
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </li>
+    </ul>
+    <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+
+    <main>
+      <div class="container">
+        <table class="highlight bordered striped centered">
+          <caption class="centered">B 超室候诊/就诊列表</caption>
+          <thead>
+              <tr>
+                  <th>编号</th>
+                  <th>就诊号</th>
+                  <th>科室</th>
+                  <th>姓名</th>
+                  <th>状态</th>
+              </tr>
+          </thead>
+  
+          <tbody>
+          </tbody>
+      </div>
+    </table>
+    </main>
+
+    <script src="../../node_modules/hammerjs/hammer.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="../materialize/js/materialize.min.js"></script>
+    <script type="module">
+        $(".button-collapse").sideNav();
+        const electron = require('electron');
+        const { ipcRenderer } = electron;
+        // const Patient = require("../js/classes/Patient.js")
+
+        window.onload = (e) => {
+          ipcRenderer.send("patientlist:ultra_update"); // 请求更新病人列表 
+        }
+
+        // 正式更新病人列表
+        ipcRenderer.removeAllListeners("patientlist:ultra_update_index");
+        ipcRenderer.on("patientlist:ultra_update_index", (e, item) => {
+          let tbody = document.querySelector("tbody");
+          tbody.innerHTML = "";
+          for (let i = 0; i < item.length; i++) {
+            let tr = document.createElement("tr");
+            let tdrow = document.createElement("td");
+            tdrow.innerHTML = i + 1;
+            tr.appendChild(tdrow);
+
+            let tdId = document.createElement("td");
+            tdId.innerHTML = item[i].id;
+            tr.appendChild(tdId);
+
+            let tdDepartment = document.createElement("td");
+            tdDepartment.innerHTML = "B 超室";
+            tr.appendChild(tdDepartment);
+
+            let tdName = document.createElement("td");
+            tdName.innerHTML = item[i].name;
+            tr.appendChild(tdName);
+
+            let tdStatus = document.createElement("td");
+            if (item[i].bTreatmentTime.length == 0) {
+              tdStatus.innerHTML = "待检查";
+              tdStatus.classList.add("red-text");
+            } else {
+              tdStatus.innerHTML = "检查中";
+              tdStatus.classList.add("green-text");
+            }
+            tr.appendChild(tdStatus);
+
+            tbody.appendChild(tr);
+          }
+        })
+    </script>
+
+    <script type="module">
+  const { remote, ipcRenderer } = require('electron');
+  const { FindInPage } = require('electron-find');
+  let findInPage = null;
+
+  ipcRenderer.removeAllListeners('page:find');
+  ipcRenderer.on('page:find', () => {
+    if (findInPage != null) findInPage.closeFindWindow(), findInPage.destroy();
+    findInPage = new FindInPage(remote.getCurrentWebContents(), {
+        preload: true,
+        offsetTop: 0,
+        offsetRight: 30
+    })
+    findInPage.openFindWindow();
+  })
+    </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../materialize/css/materialize.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据结构与算法课程设计-算法设计-链表</title>
+</head>
+<body>
+    <div id="container">
+        <div id="forms">
+            <nav>
+                <div class="nav-wrapper center z-depth-3">
+                <a class="flow-text" id="ListName">Single Linked List</a>
+                </div>
+            </nav>
+            <form id="form1">
+                <div id="form1-input" class="row">
+                    <div>
+                        <label>Insert</label>
+                        <input type="text" id="item1" autofocus>
+                    </div>
+                    <div>
+                        <label>After ith</label>
+                        <input type="text" id="ith" placeholder="1~size (End by default)" autofocus>
+                    </div>
+                </div>
+                <button class="btn waves-effect waves-light" type="submit">add Item</button>
+            </form>
+    
+            <form id="form4">
+                <div id="form4-input" class="row">
+                    <div>
+                     <label>Insert</label>
+                      <input type="text" id="item4" autofocus>
+                  </div>
+                  <div>
+                      <label>Before ith</label>
+                      <input type="text" id="ith4" placeholder="1~size (Front by default)" autofocus>
+                  </div>
+                </div>
+                <button class="btn waves-effect waves-light" type="submit">add Item</button>
+            </form>
+    
+            <form id="form2">
+                <div>
+                    <label>Delete ith</label>
+                    <input type="text" id="item2" placeholder="1~size" autofocus>
+                </div>
+                <button class="btn waves-effect waves-light" type="submit">Delete item</button>
+            </form>
+    
+    
+            <form id="form3">
+                <div>
+                    <label>Delte element</label>
+                    <input type="text" id="item3" autofocus>
+                </div>
+                <button class="btn waves-effect waves-light" type="submit">Delete item</button>
+            </form>
+        </div>
+    
+        <div id="svgContainer">
+            <svg id="sh_circleContainer" class="container">
+                <g id="g_circle_and_arrow"></g>
+                <g id="g_tail_arrow"></g>
+            </svg>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="../js/script.js" type="module"></script>
+    
+    <script type="module">
+        const { remote, ipcRenderer } = require('electron');
+        const { FindInPage } = require('electron-find');
+        let findInPage = null;
+  
+        ipcRenderer.removeAllListeners('page:find');
+        ipcRenderer.on('page:find', () => {
+          if (findInPage != null) findInPage.closeFindWindow(), findInPage.destroy();
+          findInPage = new FindInPage(remote.getCurrentWebContents(), {
+              preload: true,
+              offsetTop: 0,
+              offsetRight: 30
+          })
+          findInPage.openFindWindow();
+        })
+    </script>
+</body>
+</html>

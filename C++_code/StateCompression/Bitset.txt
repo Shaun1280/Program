@@ -1,0 +1,16 @@
+#include<bitset>
+//bitset<32> bitvec; //32位，全为0。   0based
+a.size()      返回大小（位数）
+a.count()     返回1的个数
+a.any()       返回是否有1
+a.none()      返回是否没有1
+a.set()       全都变成1
+a.set(p)      将第p+1位变成1
+a.set(p, x)   将第p+1位变成x
+a.reset()     全都变成0
+a.reset(p)    将第p+1位变成0
+a.flip()      全都取反
+a.flip(p)     将第p+1位取反
+a.to_ulong()  返回它转换为unsigned long的结果，如果超出范围则报错
+a.to_ullong() 返回它转换为unsigned long long的结果，如果超出范围则报错
+a.to_string() 返回它转换为string的结果

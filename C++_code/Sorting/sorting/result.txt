@@ -1,0 +1,8 @@
+                input1      input2      input3      input4      input5      input6      input7      input8      
+insertion sort: 0ms         0ms         0ms         21ms        1749ms      >10000ms    0ms         24ms        
+selection sort: 0ms         0ms         2ms         44ms        3888ms      >10000ms    47ms        38ms        
+bubble sort:    0ms         0ms         2ms         245ms       >10000ms    >10000ms    0ms         297ms       
+shell sort:     0ms         0ms         0ms         1ms         13ms        186ms       0ms         0ms         
+heap sort:      0ms         0ms         0ms         1ms         10ms        138ms       1ms         1ms         
+merge sort:     0ms         0ms         0ms         1ms         11ms        115ms       1ms         0ms         
+quick sort:     0ms         0ms         0ms         1ms         12ms        141ms       30ms        32ms        

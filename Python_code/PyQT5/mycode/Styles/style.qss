@@ -1,0 +1,9 @@
+QMainWindow{
+    border-image: url(../../image/icon.icon);
+}
+
+QToolTip {
+    border: 1px solid rgb(45, 45, 45);
+    background: white;
+    color: red;
+}

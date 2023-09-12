@@ -1,0 +1,71 @@
+header, main, footer {
+    padding-left: 300px;
+}
+
+@media only screen and (max-width : 992px) {
+    header, main, footer {
+        padding-left: 0;
+    }
+}
+
+:root {
+    --primary-color: #2b81e4;
+    --secondary-color: #eee;
+    --white-color: #fff;
+    --grey-color: #555;
+    --light-grey-color: #777;
+}
+
+/* department */
+#department-container {
+    display: flex;
+    flex-direction: row;
+}
+
+#department-wrapper {
+    width: 35%;
+    margin-left: 10%;
+}
+
+.collap-department {
+    margin-top: 10%;
+    margin-bottom: 10%;
+    padding: 5% 5%;
+}
+
+.department-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.department-doctor {
+    display: flex;
+    flex-direction: row;
+    justify-content : space-between;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem ;
+}
+
+.department-doctor:hover {
+    cursor: pointer;
+}
+
+.doctor-status {
+    display: flex;
+    flex: row;
+    margin-top: 0.4rem;
+}
+
+.doctor-btns { opacity: 0; }
+
+.doctor-status-icon {
+    height: 0.8rem;
+    width: 0.8rem;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+    z-index: 100;
+}
+/* department */
