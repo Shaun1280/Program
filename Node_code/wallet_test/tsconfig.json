@@ -1,0 +1,19 @@
+// tsconfig.json
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "./dist",
+    "allowJs": true,
+    "lib": [
+      "esnext"
+    ],
+    "target": "es2017"
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "__tests__"
+  ]
+}
