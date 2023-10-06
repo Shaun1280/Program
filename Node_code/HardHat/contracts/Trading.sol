@@ -94,6 +94,14 @@ contract Trading is ERC721URIStorage, EIP712, AccessControl {
         return pendingWithdrawals[msg.sender];
     }
 
+    function getChainID() external view returns (uint256) {
+        uint256 id;
+        assembly {
+            id := chainid()
+        }
+        return id;
+    }
+
     function _hash(
         NFTVoucher calldata voucher
     ) internal view returns (bytes32) {

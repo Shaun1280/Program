@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { LazyMinter } from '../lib/LazyMinter';
 
 async function deploy() {
     const [minter, redeemer, _] = await ethers.getSigners()
@@ -32,7 +33,11 @@ describe("Trading", function () {
         const { contract, redeemerContract, redeemer, minter } = await deploy()
 
         const lazyMinter = new LazyMinter({ contract, signer: minter })
-        const voucher = await lazyMinter.createVoucher(1, "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi")
+        const voucher = await lazyMinter.createVoucher(
+            1,
+            "Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ",
+            "ipfs://Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ"
+        )
 
         await expect(redeemerContract.redeem(redeemer.address, voucher))
             .to.emit(contract, 'Transfer')  // transfer from null address to minter
