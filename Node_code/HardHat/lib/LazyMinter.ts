@@ -14,14 +14,13 @@ class LazyMinter {
         this.signer = signer;
     }
 
-    async createVoucher(tokenId, imageHash, uri, minPrice = 0) {
-        const voucher = { tokenId, imageHash, uri, minPrice };
+    async createVoucher(tokenId, uri, minPrice = 0) {
+        const voucher = { tokenId, uri, minPrice };
         const domain = await this._signingDomain();
         const types = {
             NFTVoucher: [
                 { name: "tokenId", type: "uint256" },
                 { name: "minPrice", type: "uint256" },
-                { name: "imageHash", type: "string" },
                 { name: "uri", type: "string" }
             ]
         };

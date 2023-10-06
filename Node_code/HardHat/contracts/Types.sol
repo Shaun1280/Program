@@ -9,12 +9,18 @@ struct NFTVoucher {
     // The minimum price (in wei) that the NFT creator is willing to accept
     // for the initial sale of this NFT.
     uint256 minPrice;
-    string imageHash;
     // The metadata URI to associate with this token.
     string uri;
     // the EIP-712 signature of all other fields in the NFTVoucher struct.
     // For a voucher to be valid
     // it must be signed by an account with the MINTER_ROLE.
+    bytes signature;
+}
+
+struct PromptVoucher {
+    uint256 tokenId;
+    uint256 minPrice;
+    string prompt;
     bytes signature;
 }
 

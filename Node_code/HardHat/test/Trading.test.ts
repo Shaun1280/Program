@@ -35,7 +35,6 @@ describe("Trading", function () {
         const lazyMinter = new LazyMinter({ contract, signer: minter })
         const voucher = await lazyMinter.createVoucher(
             1,
-            "Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ",
             "ipfs://Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ"
         )
 
@@ -52,7 +51,6 @@ describe("Trading", function () {
         const lazyMinter = new LazyMinter({ contract, signer: minter })
         const voucher = await lazyMinter.createVoucher(
             1,
-            "Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ",
             "ipfs://Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ"
         )
 
@@ -75,7 +73,6 @@ describe("Trading", function () {
         const lazyMinter = new LazyMinter({ contract, signer: rando })
         const voucher = await lazyMinter.createVoucher(
             1,
-            "Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ",
             "ipfs://Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ"
         )
 
@@ -92,7 +89,6 @@ describe("Trading", function () {
         const lazyMinter = new LazyMinter({ contract, signer: rando })
         const voucher = await lazyMinter.createVoucher(
             1,
-            "Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ",
             "ipfs://Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ"
         )
 
@@ -108,7 +104,6 @@ describe("Trading", function () {
         const minPrice = ethers.WeiPerEther // charge 1 Eth
         const voucher = await lazyMinter.createVoucher(
             1,
-            "Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ",
             "ipfs://Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ",
             BigInt.asUintN(256, minPrice)
         )
@@ -125,7 +120,6 @@ describe("Trading", function () {
         const minPrice = ethers.WeiPerEther // charge 1 Eth
         const voucher = await lazyMinter.createVoucher(
             1,
-            "Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ",
             "ipfs://Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ",
             BigInt.asUintN(256, minPrice)
         )

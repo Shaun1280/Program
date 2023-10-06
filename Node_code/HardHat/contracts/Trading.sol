@@ -17,7 +17,6 @@ contract Trading is ERC721URIStorage, EIP712, AccessControl {
     string private constant SIGNATURE_VERSION = "1";
 
     mapping(address => uint256) pendingWithdrawals;
-    mapping(string => uint8) hashes;
 
     constructor(
         address payable minter
@@ -113,11 +112,10 @@ contract Trading is ERC721URIStorage, EIP712, AccessControl {
                 keccak256(
                     abi.encode(
                         keccak256(
-                            "NFTVoucher(uint256 tokenId,uint256 minPrice,string imageHash,string uri)"
+                            "NFTVoucher(uint256 tokenId,uint256 minPrice,string uri)"
                         ),
                         voucher.tokenId,
                         voucher.minPrice,
-                        keccak256(bytes(voucher.imageHash)),
                         keccak256(bytes(voucher.uri))
                     )
                 )
