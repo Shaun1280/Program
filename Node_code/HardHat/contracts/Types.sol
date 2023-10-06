@@ -17,31 +17,12 @@ struct NFTVoucher {
     bytes signature;
 }
 
-struct PromptVoucher {
+struct Candidate {
+    address owner;
     uint256 tokenId;
-    uint256 minPrice;
-    string prompt;
-    bytes signature;
 }
 
-struct PromptNft {
-    // owner of the prompt NFT
-    address owner;
-    // minter of the prompt NFT
-    address minter;
-    // prompt for the prompt NFT
-    string prompt;
-}
-
-struct ArtNft {
-    // owner of this nft
-    address owner;
-    // minter of this nft
-    address minter;
-    // prompt NFT for this NFT
-    PromptNft promptNft;
-    // seed used to generate this art.
-    uint64 seed;
-    // image of this nft
-    string image;
+struct Assessment {
+    address judger;
+    uint256 price;
 }
