@@ -15,7 +15,7 @@ class LazyMinter {
     }
 
     async createVoucher(tokenId, uri, minPrice = 0) {
-        const voucher = { tokenId, uri, minPrice };
+        const voucher = { tokenId, minPrice, uri };
         const domain = await this._signingDomain();
         const types = {
             NFTVoucher: [

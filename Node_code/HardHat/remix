@@ -1,0 +1,13 @@
+remixd - s ~/Desktop/VSC_WORKSPACE / Program / Node_code / HardHat--remix - ide https://remix.ethereum.org
+
+[
+    {
+        "tokenId": 1,
+        "minPrice": 0,
+        "uri": 'ipfs://Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ',
+        "signature": '0x5ace3c23d58354c93310c5923c367ce1f73973fa4827e970ab3a09dd867c0416571e1f17ff141aa38bd45e0976b8373d44615a0ebd03202cee6625d2c57207e21b'
+    }
+]
+[1, 0, 'ipfs://Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ', '0x5ace3c23d58354c93310c5923c367ce1f73973fa4827e970ab3a09dd867c0416571e1f17ff141aa38bd45e0976b8373d44615a0ebd03202cee6625d2c57207e21b']
+
+keccak256("MINTER_ROLE"), 0x3b332A713c916DdAE24ad52BE96c199d0f7c27BA

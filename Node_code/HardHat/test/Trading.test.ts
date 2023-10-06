@@ -37,6 +37,7 @@ describe("Trading", function () {
             1,
             "ipfs://Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ"
         )
+        console.log(voucher);
 
         await expect(redeemerContract.redeem(redeemer.address, voucher))
             .to.emit(contract, 'Transfer')  // transfer from null address to minter
@@ -107,6 +108,8 @@ describe("Trading", function () {
             "ipfs://Qmb9vsjexQs4uVMN8MSv7jvoNogixh2kuAc66KbQHDgsKQ",
             BigInt.asUintN(256, minPrice)
         )
+
+        console.log(minPrice)
 
         const payment = minPrice - BigInt("1000");
         await expect(redeemerContract.redeem(redeemer.address, voucher, { value: payment }))
