@@ -26,3 +26,8 @@ struct Assessment {
     address judger;
     uint256 price;
 }
+
+struct Result {
+    uint256 tokenId;
+    Assessment[] assessment;
+}

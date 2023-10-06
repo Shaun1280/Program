@@ -63,7 +63,6 @@ contract Jury {
         require(ok == 1, "This art has already been registered");
 
         art.push(artId);
-        assessmentReceived[artId] = new Assessment[](0);
     }
 
     // vote for a candidate
@@ -74,5 +73,14 @@ contract Jury {
         assessmentReceived[artId].push(Assessment(msg.sender, price));
         juryStatus[msg.sender][artId] = true;
         jury.push(msg.sender);
+    }
+
+    // get the results
+    function getResults() public view returns (Result[] memory) {
+        Result[] memory results = new Result[](art.length);
+        for (uint256 i = 0; i < art.length; i++) {
+            results[i] = Result(art[i], assessmentReceived[i]);
+        }
+        return results;
     }
 }
