@@ -28,11 +28,8 @@ contract Trading is ERC721URIStorage, EIP712, AccessControl {
     function awardItem(
         address recipient,
         uint256 tokenId,
-        string memory imageHash,
         string memory metadata
     ) public {
-        require(hashes[imageHash] != 1);
-        hashes[imageHash] = 1;
         _mint(recipient, tokenId);
         _setTokenURI(tokenId, metadata);
     }
@@ -57,11 +54,17 @@ contract Trading is ERC721URIStorage, EIP712, AccessControl {
         // make sure signature is valid and get the address of the signer
         address signer = _verify(voucher);
 
+        // make sure that the signer is authorized to mint NFTs
+        require(
+            hasRole(MINTER_ROLE, signer),
+            "Signature invalid or unauthorized"
+        );
+
         // make sure that the redeemer is paying enough to cover the buyer's cost
         require(msg.value >= voucher.minPrice, "Insufficient funds to redeem");
 
         // first assign the token to the signer, to establish provenance on-chain
-        awardItem(signer, voucher.tokenId, voucher.imageHash, voucher.uri);
+        awardItem(signer, voucher.tokenId, voucher.uri);
 
         // transfer the token to the redeemer
         _transfer(signer, redeemer, voucher.tokenId);
