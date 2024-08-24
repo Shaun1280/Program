@@ -17,6 +17,9 @@ func main() {
 		slice[i] = i
 	}
 
+	arr := [5]int{1, 2, 3, 4, 5} // Initialize with values
+	arr2 := [...]int{1, 2, 3, 4, 5} // Let compiler count the elements
+
 	mymap := make(map[string]int)
 
 	channel := make(chan int)
