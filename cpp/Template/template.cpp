@@ -109,10 +109,10 @@ struct Container;
 // 1.3.1
 template <typename T>
 struct RemoveReferenceConst_ {
-        private:
+    private:
     using inner_type = typename std::remove_reference<T>::type;
 
-        public:
+    public:
     using type = typename std::remove_const<inner_type>::type;
 };
 
@@ -484,7 +484,7 @@ struct VarTypeDict {
             return *static_cast<const ReturnType*>(m_tuple[TagPos].get());
         }
 
-            private:
+        private:
         std::shared_ptr<void> m_tuple[sizeof...(TTypes)];
     };
 
@@ -510,6 +510,71 @@ float fun2_2_1(const TIn& in) {
     auto weight = in.template Get<Weight>();
     return a * weight + b * (1.0f - weight);
 }
+
+// 2.3.1 Policy
+namespace policy {
+    struct Add;
+
+    // default usage Accumulator<> ...
+    template <typename TAccuType = Add, bool DoAverage = false, typename ValueType = float>
+    struct Accumulator {};
+
+    // more flexible: Accumulator<PValueTypeIs<float>,PAccuTypeIs<Add>,PAveValueIs<false>>
+
+    struct AccPolicy {
+        struct AccuTypeCategory {
+            struct Add;
+            struct Mul;
+        };
+        using Accu = AccuTypeCategory::Add;
+
+        struct IsAveValueCategory;
+        static constexpr bool IsAve = false;
+
+        struct ValueTypeCategory;
+        using Value = float;
+    };
+
+    template <typename... TPolicies>
+    struct Accumulator2 {
+        using TPolicyCont = PolicyContainer<TPolicies...>;
+        using TPolicyRes = PolicySelect<AccPolicy, TPolicyCont>;
+
+        using ValueType = typename TPolicyRes::Value;
+        using AccuType = typename TPolicyRes::Accu;
+        static constexpr bool IsAve = TPolicyRes::IsAve;
+
+        public:
+        template <typename TIn>
+        static auto Eval(const TIn& in) {
+            if constexpr (std::is_same<AccuType, AccPolicy::AccuTypeCategory::Add>::value) {
+                ValueType count = 0, res = 0;
+                for (const auto& val : in) {
+                    res += val;
+                    count += 1;
+                }
+                if constexpr (IsAve) {
+                    return res / count;
+                } else {
+                    return res;
+                }
+            } else if constexpr (std::is_smae<AccuType, AccPolicy::AccuTypeCategory::Mul>::value) {
+                ValueType count = 0, res = 1;
+                for (const auto& val : in) {
+                    res *= val;
+                    count += 1;
+                }
+                if constexpr (IsAve) {
+                    return pow(res, 1.0 / count);
+                } else {
+                    return res;
+                }
+            } else {
+                static_assert(DependencyFalse<AccuType>);
+            }
+        }
+    };
+}  // namespace policy
 
 int main() {
     std::cout << res << std::endl;
