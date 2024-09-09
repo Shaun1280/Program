@@ -320,7 +320,7 @@ auto wrap2Value2 = stdWrap2::Wrap2_<3>::value<2>;
 template <size_t N>
 constexpr bool is_odd = ((N & 1) == 1);
 
-template <bool cur, typename TNext>
+template <bool Cur, typename TNext>
 constexpr static bool AndValue = false;
 
 template <typename TNext>
@@ -513,13 +513,11 @@ float fun2_2_1(const TIn& in) {
 
 // 2.3.1 Policy
 namespace policy {
-    struct Add;
+    template <bool Cur, typename TNext>
+    static constexpr bool AndValue = false;
 
-    // default usage Accumulator<> ...
-    template <typename TAccuType = Add, bool DoAverage = false, typename ValueType = float>
-    struct Accumulator {};
-
-    // more flexible: Accumulator<PValueTypeIs<float>,PAccuTypeIs<Add>,PAveValueIs<false>>
+    template <typename TNext>
+    static constexpr bool AndValue<true, TNext> = TNext::value;
 
     struct AccPolicy {
         struct AccuTypeCategory {
@@ -535,10 +533,78 @@ namespace policy {
         using Value = float;
     };
 
+    struct PMulAccu : virtual public AccPolicy {
+        using MajorClass = AccPolicy;
+        using MinorClass = AccPolicy::AccuTypeCategory;
+        using Accu = AccuTypeCategory::Mul;
+    };
+
     template <typename... TPolicies>
-    struct Accumulator2 {
+    struct PolicyContainer {};
+
+    namespace NSPolicySelect {
+        template <typename TPolicyCont>
+        struct MinorCheck_ {
+            static constexpr bool value = true;
+        };
+
+        template <typename TMinorClass, typename... TRemainPolicies>
+        struct MinorDedup_ {
+            static constexpr bool value = true;
+        };
+
+        template <typename TMinorClass, typename TCurPolicy, typename... TRemainPolicies>
+        struct MinorDedup_<TMinorClass, TCurPolicy, TRemainPolicies...> {
+            using CurMinorClass = typename TCurPolicy::MinorClass;
+            // check if the current policy has the different minor class as the current minor class
+            static constexpr bool cur_check = !std::is_same<TMinorClass, CurMinorClass>::value;
+            static constexpr bool value =
+                AndValue<cur_check, MinorDedup_<TMinorClass, TRemainPolicies...>>;
+        };
+
+        template <typename TCurPolicy, typename... TRemainPolicies>
+        struct MinorCheck_<PolicyContainer<TCurPolicy, TRemainPolicies...>> {
+            // compare current policy minor class with the remaining policies
+            static constexpr bool cur_check =
+                MinorDedup_<typename TCurPolicy::MinorClass, TRemainPolicies...>::value;
+            // MinorCheck_<PolicyContainer<TRemainPolicies...> checks if the remaining policies have
+            // the same minor class
+            static constexpr bool value = AndValue < cur_check,
+                                  MinorCheck_<PolicyContainer<TRemainPolicies...>>;
+        };
+
+        template <typename TMajorClass, typename TPolicyContainer>
+        struct Selector_;
+
+        // specialization so that the second template parameter can only be a PolicyContainer
+        template <typename TMajorClass, typename... TPolicies>
+        struct Selector_<TMajorClass, PolicyContainer<TPolicies...>> {
+            // create a new policy container with the TMajorClass Only
+            using TMF = typename MajorFilter_<PolicyContainer<>, TMajorClass, TPolicies...>::type;
+
+            // check if there are no two policies with the same minor class
+            static_assert(MinorCheck_<TMF>::value, "Minor policy conflict");
+
+            using type = std::conditional_t<IsArrayEmpty<TMF>, TMajorClass, PolicySelRes<TMF>>;
+        };
+    };  // namespace NSPolicySelect
+
+    struct Add;
+
+    // default usage Accumulator<> ...
+    template <typename TAccuType = Add, bool DoAverage = false, typename ValueType = float>
+    struct Accumulator2 {};
+
+    // more flexible: Accumulator2<PValueTypeIs<float>,PAccuTypeIs<Add>,PAveValueIs<false>>
+
+    template <typename MajorClass, typename TPolicyContainter>
+    using PolicySelect = typename NSPolicySelect::Selector_<MajorClass, TPolicyContainter>::type;
+
+    // a template that receives a list of policies, and then uses it to eval the result.
+    template <typename... TPolicies>
+    struct Accumulator {
         using TPolicyCont = PolicyContainer<TPolicies...>;
-        using TPolicyRes = PolicySelect<AccPolicy, TPolicyCont>;
+        using TPolicyRes = PolicySelect<AccPolicy, TPolicyCont>;  // policy select result
 
         using ValueType = typename TPolicyRes::Value;
         using AccuType = typename TPolicyRes::Accu;
@@ -558,7 +624,7 @@ namespace policy {
                 } else {
                     return res;
                 }
-            } else if constexpr (std::is_smae<AccuType, AccPolicy::AccuTypeCategory::Mul>::value) {
+            } else if constexpr (std::same<AccuType, AccPolicy::AccuTypeCategory::Mul>::value) {
                 ValueType count = 0, res = 1;
                 for (const auto& val : in) {
                     res *= val;
@@ -571,9 +637,22 @@ namespace policy {
                 }
             } else {
                 static_assert(DependencyFalse<AccuType>);
+                return ValueType(0);
             }
         }
     };
+
+    void test() {
+        std::array<int, 5> a = {1, 2, 3, 4, 5};
+        std::cout << Accumulator<>::Eval(a) << std::endl;
+        std::cout << Accumulator<PMulAccu>::Eval(a) << std::endl;
+        std::cout << Accumulator<PMulAccu, PAve>::Eval(a) << std::endl;
+        // std::cout << policy::Accumulator2<PMulAccu, PAddAccu>::Eval(a) << std::endl; // should
+        // fail
+        std::cout << Accumulator<PAve, PMulAccu>::Eval(a) << std::endl;
+        std::cout << Accumulator<PAve, PMulAccu, PValueTypeis<double>>::Eval(a) << std::endl;
+        std::cout << Accumulator<PAve, PMulAccu, PDoubleValue>::Eval(a) << std::endl;
+    }
 }  // namespace policy
 
 int main() {
@@ -591,5 +670,7 @@ int main() {
     // 1.2.2 VarTypeDict
     std::cout << fun2_2_1(FParams::Create().Set<A>(1.3f).Set<B>(2.4f).Set<Weight>(0.1f))
               << std::endl;
+
+    policy::test();
     return 0;
 }
