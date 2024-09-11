@@ -424,11 +424,9 @@ template <typename TIn> float fun2_2_1(const TIn &in) {
 
 // 2.3.1 Policy
 namespace policy {
-    template <bool Cur, typename TNext> static constexpr bool AndValue = false;
-
-    template <typename TNext> static constexpr bool AndValue<true, TNext> = TNext::value;
-
     struct AccPolicy {
+        using MajorClass = AccPolicy;
+
         struct AccuTypeCategory {
             struct Add;
             struct Mul;
@@ -442,17 +440,53 @@ namespace policy {
         using Value = float;
     };
 
-    struct PMulAccu : virtual public AccPolicy {
-        using MajorClass = AccPolicy;
-        using MinorClass = AccPolicy::AccuTypeCategory;
-        using Accu = AccuTypeCategory::Mul;
-    };
+#define TypePolicyObj(PolicyName, Ma, Mi, Val)                                                     \
+    struct PolicyName : virtual public Ma {                                                        \
+        using MinorClass = Ma::Mi##TypeCategory;                                                   \
+        using Mi = Ma::Mi##TypeCategory::Val;                                                      \
+    }
 
-    struct PAddAccu : virtual public AccPolicy {
-        using MajorClass = AccPolicy;
-        using MinorClass = AccPolicy::AccuTypeCategory;
-        using Accu = AccuTypeCategory::Add;
-    };
+#define ValueTypePolicyObj(PolicyName, Ma, Mi, Val)                                                \
+    struct PolicyName : virtual public Ma {                                                        \
+        using MinorClass = Ma::Mi##TypeCategory;                                                   \
+        using Mi = Val;                                                                            \
+    }
+
+#define ValuePolicyObj(PolicyName, Ma, Mi, Val)                                                    \
+    struct PolicyName : virtual public Ma {                                                        \
+        using MinorClass = Ma::Mi##ValueCategory;                                                  \
+        static constexpr bool Mi = Val;                                                            \
+    }
+
+#define TypePolicyTemplate(PolicyName, Ma, Mi)                                                     \
+    template <typename Val> struct PolicyName : virtual public Ma {                                \
+        using MinorClass = Ma::Mi##TypeCategory;                                                   \
+        using Mi = Ma::Mi##TypeCategory::Val;                                                      \
+    }
+
+#define ValueTypePolicyTemplate(PolicyName, Ma, Mi)                                                \
+    template <typename Val> struct PolicyName : virtual public Ma {                                \
+        using MinorClass = Ma::Mi##TypeCategory;                                                   \
+        using Mi = Val;                                                                            \
+    }
+
+#define ValuePolicyTemplate(PolicyName, Ma, Mi)                                                    \
+    template <bool Val> struct PolicyName : virtual public Ma {                                    \
+        using MinorClass = Ma::Mi##ValueCategory;                                                  \
+        static constexpr bool Mi = Val;                                                            \
+    }
+
+    TypePolicyObj(PAddAccu, AccPolicy, Accu, Add);
+    TypePolicyObj(PMulAccu, AccPolicy, Accu, Mul);
+    ValueTypePolicyObj(PDoubleValue, AccPolicy, Value, double);
+    ValuePolicyObj(PAve, AccPolicy, IsAve, true);
+    ValuePolicyObj(PNoAve, AccPolicy, IsAve, false);
+    ValueTypePolicyTemplate(PValueTypeIs, AccPolicy, Value);
+    ValuePolicyTemplate(PAvePolicyIs, AccPolicy, IsAve);
+
+    template <bool Cur, typename TNext> static constexpr bool AndValue = false;
+
+    template <typename TNext> static constexpr bool AndValue<true, TNext> = TNext::value;
 
     template <typename... TPolicies> struct PolicyContainer {};
 
@@ -540,11 +574,12 @@ namespace policy {
     template <typename MajorClass, typename TPolicyContainter>
     using PolicySelect = typename NSPolicySelect::Selector_<MajorClass, TPolicyContainter>::type;
 
-    struct Add;
+    template <typename AccuType> static constexpr bool DependencyFalse = false;
 
-    // default usage Accumulator<> ...
-    template <typename TAccuType = Add, bool DoAverage = false, typename ValueType = float>
-    struct Accumulator2 {};
+    // struct Add;
+    // // default usage Accumulator<> ...
+    // template <typename TAccuType = Add, bool DoAverage = false, typename ValueType = float>
+    // struct Accumulator2 {};
 
     // more flexible: Accumulator2<PValueTypeIs<float>,PAccuTypeIs<Add>,PAveValueIs<false>>
 
@@ -582,7 +617,7 @@ namespace policy {
                     return res;
                 }
             } else {
-                // static_assert(DependencyFalse<AccuType>);
+                static_assert(DependencyFalse<AccuType>, "Unkown AccuType");
                 return ValueType(0);
             }
         }
@@ -591,13 +626,15 @@ namespace policy {
     void test() {
         std::array<int, 5> a = {1, 2, 3, 4, 5};
         std::cout << Accumulator<>::Eval(a) << std::endl;
+        std::cout << Accumulator<PAddAccu>::Eval(a) << std::endl;
+        std::cout << Accumulator<PAddAccu, PAvePolicyIs<true>>::Eval(a) << std::endl;
         std::cout << Accumulator<PMulAccu>::Eval(a) << std::endl;
-        // std::cout << Accumulator<PMulAccu, PAve>::Eval(a) << std::endl;
+        std::cout << Accumulator<PMulAccu, PAve>::Eval(a) << std::endl;
         // // should fail to compile
         // // std::cout << policy::Accumulator2<PMulAccu, PAddAccu>::Eval(a) << std::endl;
-        // std::cout << Accumulator<PAve, PMulAccu>::Eval(a) << std::endl;
-        // std::cout << Accumulator<PAve, PMulAccu, PValueTypeis<double>>::Eval(a) << std::endl;
-        // std::cout << Accumulator<PAve, PMulAccu, PDoubleValue>::Eval(a) << std::endl;
+        std::cout << Accumulator<PAve, PMulAccu>::Eval(a) << std::endl;
+        std::cout << Accumulator<PAve, PMulAccu, PValueTypeIs<double>>::Eval(a) << std::endl;
+        std::cout << Accumulator<PAve, PMulAccu, PDoubleValue>::Eval(a) << std::endl;
     }
 } // namespace policy
 
