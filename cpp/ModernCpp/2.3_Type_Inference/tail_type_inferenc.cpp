@@ -14,7 +14,7 @@ template <typename T, typename U> decltype(auto) add3(T x, U y) {
 }
 
 std::string lookup1() { return "lookup1"; }
-std::string& lookup2() {
+std::string &lookup2() {
     static std::string s = "lookup2";
     return s;
 }
