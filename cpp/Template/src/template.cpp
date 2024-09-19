@@ -1,10 +1,16 @@
 #include <bits/stdc++.h>
 
-template <typename T> struct Fun_ { using type = T; };
+template <typename T> struct Fun_ {
+    using type = T;
+};
 
-template <> struct Fun_<int> { using type = unsigned int; };
+template <> struct Fun_<int> {
+    using type = unsigned int;
+};
 
-template <> struct Fun_<long> { using type = unsigned long long; };
+template <> struct Fun_<long> {
+    using type = unsigned long long;
+};
 
 template <typename T> using Fun = typename Fun_<T>::type;
 
@@ -21,11 +27,13 @@ template <int a> constexpr int fun = a + 1;
 auto fun3 = fun<3>;
 
 // type traits
-std::remove_reference<int &>::type h1 = 3;
-std::remove_reference_t<int &> h2 = 3;
+std::remove_reference<int&>::type h1 = 3;
+std::remove_reference_t<int&> h2 = 3;
 
 // 1.1.6
-template <int a, int b> struct Add_ { constexpr static int value = a + b; };
+template <int a, int b> struct Add_ {
+    constexpr static int value = a + b;
+};
 
 template <int a, int b> constexpr int Add = a + b;
 
@@ -40,7 +48,7 @@ template <template <typename> class T1, typename T2> struct Fun1_2_1_ {
 template <template <typename> class T1, typename T2>
 using Fun1_2_1 = typename Fun1_2_1_<T1, T2>::type;
 
-Fun1_2_1<std::remove_reference, int &> h1_2_1 = 3;
+Fun1_2_1<std::remove_reference, int&> h1_2_1 = 3;
 
 // 1.2.2
 template <bool AddOrRemoveRef> struct Fun1_2_2_;
@@ -65,7 +73,7 @@ using Fun1_2_2 = typename Fun1_2_2_<AddOrRemove>::template type<T>;
 // which gives you the final, concrete type.
 template <typename T> using Res = typename Fun1_2_2<T, false>::type;
 
-Res<int &> h = 3;
+Res<int&> h = 3;
 
 // 1.2.3 declare is enough
 template <int... Vals> struct IntContainer;
@@ -89,7 +97,7 @@ template <typename T> struct RemoveReferenceConst_ {
 template <typename T>
 using RemoveReferenceConst = typename RemoveReferenceConst_<T>::type;
 
-RemoveReferenceConst<const int &> removeRefConst = 3;
+RemoveReferenceConst<const int&> removeRefConst = 3;
 
 // 1.3.2
 namespace _std {
@@ -113,11 +121,17 @@ _std::conditional_t<false, int, std::string> condition_x3 = "21312";
 struct A;
 struct B;
 
-template <typename T> struct Fun1_3_2_ { constexpr static size_t value = 0; };
+template <typename T> struct Fun1_3_2_ {
+    constexpr static size_t value = 0;
+};
 
-template <> struct Fun1_3_2_<A> { constexpr static size_t value = 1; };
+template <> struct Fun1_3_2_<A> {
+    constexpr static size_t value = 1;
+};
 
-template <> struct Fun1_3_2_<B> { constexpr static size_t value = 2; };
+template <> struct Fun1_3_2_<B> {
+    constexpr static size_t value = 2;
+};
 
 constexpr size_t h1_3_2 = Fun1_3_2_<B>::value;
 
@@ -147,7 +161,9 @@ constexpr size_t wrapperValue = Wrapper<int>::Fun_<int>::value;
 namespace _std2 {
 template <bool B, typename T = void> struct enable_if {};
 
-template <typename T> struct enable_if<true, T> { using type = T; };
+template <typename T> struct enable_if<true, T> {
+    using type = T;
+};
 
 template <bool B, typename T = void>
 using enable_if_t = typename enable_if<B, T>::type;
@@ -158,13 +174,13 @@ using enable_if_t = typename enable_if<B, T>::type;
 // this type with a default value of true."
 template <bool IsFeedBackOut, typename T,
           _std2::enable_if_t<IsFeedBackOut, bool> = true>
-constexpr decltype(auto) FeedBackOut_(T &&value) {
+constexpr decltype(auto) FeedBackOut_(T&& value) {
     return std::forward<T>(value);
 };
 
 template <bool IsFeedBackOut, typename T,
           _std2::enable_if_t<!IsFeedBackOut, bool> = true>
-constexpr decltype(auto) FeedBackOut_(T &&value) {
+constexpr decltype(auto) FeedBackOut_(T&& value) {
     return std::forward<T>(value);
 };
 
@@ -272,8 +288,8 @@ template <size_t N> struct AllOdd_ {
 // 1.4 奇异递归模板式 Curiously Recurring Template Pattern, CRTP
 // CRTP virtual template
 template <typename D> struct Base {
-    template <typename TI> void Fun(const TI &input) {
-        D *ptr = static_cast<D *>(this);
+    template <typename TI> void Fun(const TI& input) {
+        D* ptr = static_cast<D*>(this);
         ptr->Imp(input);
     }
 
@@ -281,7 +297,7 @@ template <typename D> struct Base {
 };
 
 struct Derived : public Base<Derived> {
-    template <typename TI> void Imp(const TI &input) {
+    template <typename TI> void Imp(const TI& input) {
         std::cout << input << std::endl;
     }
 
@@ -291,7 +307,7 @@ struct Derived : public Base<Derived> {
 };
 
 struct Derived2 : public Base<Derived2> {
-    template <typename TI> void Imp(const TI &input) {
+    template <typename TI> void Imp(const TI& input) {
         std::cout << input << " + 2 " << std::endl;
     }
 };
@@ -340,11 +356,10 @@ template <typename TTag, typename... TParameters>
 constexpr size_t Tag2ID<TTag, TTag, TParameters...> = 0;
 
 template <typename TTag, typename TCur, typename... TParameters>
-constexpr size_t
-    Tag2ID<TTag, TCur, TParameters...> = Tag2ID<TTag, TParameters...> ==
-                                                 static_cast<size_t>(-1)
-                                             ? static_cast<size_t>(-1)
-                                             : Tag2ID<TTag, TParameters...> + 1;
+constexpr size_t Tag2ID<TTag, TCur, TParameters...> =
+    Tag2ID<TTag, TParameters...> == static_cast<size_t>(-1)
+        ? static_cast<size_t>(-1)
+        : Tag2ID<TTag, TParameters...> + 1;
 
 template <typename TVal, size_t N, size_t M, typename TProcessedTypes,
           typename... TRemainTypes>
@@ -383,15 +398,15 @@ template <typename... TParameters> struct VarTypeDict {
             }
         }
 
-        template <typename TTag, typename TVal> auto Set(TVal &&val) && {
+        template <typename TTag, typename TVal> auto Set(TVal&& val) && {
             using namespace NSMultiTypeDict;
 
             constexpr static size_t TagPos = Tag2ID<TTag, TParameters...>;
 
             using rawVal = std::decay_t<TVal>;
-            rawVal *tmp = new rawVal{std::forward<TVal>(val)};
-            m_tuple[TagPos] = std::shared_ptr<void>(tmp, [](void *ptr) {
-                rawVal *nptr = static_cast<rawVal *>(ptr);
+            rawVal* tmp = new rawVal{std::forward<TVal>(val)};
+            m_tuple[TagPos] = std::shared_ptr<void>(tmp, [](void* ptr) {
+                rawVal* nptr = static_cast<rawVal*>(ptr);
                 delete nptr;
             });
 
@@ -399,7 +414,7 @@ template <typename... TParameters> struct VarTypeDict {
             return new_type{std::move(m_tuple)};
         }
 
-        template <typename TTag> const auto &Get() const {
+        template <typename TTag> const auto& Get() const {
             using namespace NSMultiTypeDict;
 
             constexpr static size_t TagPos = Tag2ID<TTag, TParameters...>;
@@ -407,7 +422,7 @@ template <typename... TParameters> struct VarTypeDict {
             using ReturnType =
                 std::tuple_element_t<TagPos, std::tuple<TTypes...>>;
 
-            return *static_cast<const ReturnType *>(m_tuple[TagPos].get());
+            return *static_cast<const ReturnType*>(m_tuple[TagPos].get());
         }
 
       private:
@@ -430,7 +445,7 @@ struct Weight;
 struct Weight2;
 using FParams = VarTypeDict<A, B, Weight>;
 
-template <typename TIn> float fun2_2_1(const TIn &in) {
+template <typename TIn> float fun2_2_1(const TIn& in) {
     auto a = in.template Get<A>();
     auto b = in.template Get<B>();
     auto weight = in.template Get<Weight>();
@@ -576,8 +591,8 @@ struct PolicySelRes<PolicyContainer<TCurPolicy, TRemainPolicies...>>
 template <typename TPolicyCont> static constexpr bool IsArrayEmpty = false;
 
 template <typename... TPolicies>
-static constexpr bool
-    IsArrayEmpty<PolicyContainer<TPolicies...>> = sizeof...(TPolicies) == 0;
+static constexpr bool IsArrayEmpty<PolicyContainer<TPolicies...>> =
+    sizeof...(TPolicies) == 0;
 
 template <typename TMajorClass, typename TPolicyContainter> struct Selector_;
 
@@ -624,11 +639,11 @@ template <typename... TPolicies> struct Accumulator {
     static constexpr bool IsAve = TPolicyRes::IsAve; // false;
 
   public:
-    template <typename TIn> static auto Eval(const TIn &in) {
+    template <typename TIn> static auto Eval(const TIn& in) {
         if constexpr (std::is_same_v<AccuType,
                                      AccPolicy::AccuTypeCategory::Add>) {
             ValueType count = 0, res = 0;
-            for (const auto &val : in) {
+            for (const auto& val : in) {
                 res += val;
                 count += 1;
             }
@@ -640,7 +655,7 @@ template <typename... TPolicies> struct Accumulator {
         } else if constexpr (std::is_same_v<AccuType,
                                             AccPolicy::AccuTypeCategory::Mul>) {
             ValueType count = 0, res = 1;
-            for (const auto &val : in) {
+            for (const auto& val : in) {
                 res *= val;
                 count += 1;
             }
@@ -674,6 +689,13 @@ void test() {
               << std::endl;
 }
 } // namespace policy
+
+template <typename TData> struct LowerAccessImpl;
+
+template <typename TData> auto LowerAccess(TData&& data) {
+    using RawType = std::remove_cvref_t<TData>;
+    return LowerAccessImpl<RawType>(std::forward<TData>(data));
+}
 
 int main() {
     std::cout << res << std::endl;
