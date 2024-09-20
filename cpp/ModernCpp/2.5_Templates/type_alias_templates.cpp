@@ -32,11 +32,9 @@ template <typename T, typename... Ts> auto printf3(T value, Ts... args) {
         ([&args] { std::cout << args << std::endl; }(), value)...};
 }
 
-template <typename... T> auto sum(T... args) { return (args + ...); }
 
 int main() {
     printf2(1, 2, 3, 4, 5);
     printf3(1, 2, 3, 4, 5);
-    std::cout << sum(1, 2, 3, 4, 5) << std::endl;
     return 0;
 }
