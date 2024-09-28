@@ -11,5 +11,6 @@ int main() {
     MetaNN::ContinousMemory<int, CPU> memory(10);
     MetaNN::Matrix<int, CPU> matrix(3, 3);
     auto la = LowerAccess(matrix);
+    auto ptr = la.RawMemory();
     return 0;
 }
