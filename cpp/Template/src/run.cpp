@@ -8,6 +8,6 @@ using CPU = MetaNN::DeviceTags::CPU;
 
 int main() {
     MetaNN::ContinousMemory<int, CPU> memory(10);
-    // MetaNN::Matrix<int, CPU> matrix;
+    MetaNN::Matrix<int, CPU> matrix(3, 3);
     return 0;
 }
