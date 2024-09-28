@@ -4,6 +4,7 @@
 #include <MetaNN/data/facilities/traits.h>
 #include <MetaNN/data/matrices/cpu_matrix.h>
 #include <MetaNN/data/matrices/matrices.h>
+#include <MetaNN/data/matrices/trivial_matrix.h>
 
 using CPU = MetaNN::DeviceTags::CPU;
 
