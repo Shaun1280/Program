@@ -127,6 +127,7 @@ template <typename T> struct IsIterator_ {
     static std::true_type
     test(typename std::iterator_traits<R>::iterator_category*);
 
+    // ... has lowest priority
     template <typename R> static std::false_type test(...);
 
     static constexpr bool value = decltype(test<T>(nullptr))::value;
