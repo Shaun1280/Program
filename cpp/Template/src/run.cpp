@@ -13,5 +13,6 @@ int main() {
     MetaNN::Matrix<int, CPU> matrix(3, 3);
     auto la = LowerAccess(matrix);
     auto ptr = la.RawMemory();
+    auto trivialMatrix = MetaNN::MakeTrivialMatrix<int, CPU>(3, 3, 1);
     return 0;
 }
