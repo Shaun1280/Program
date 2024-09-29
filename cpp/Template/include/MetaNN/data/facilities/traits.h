@@ -121,6 +121,19 @@ template <typename T> struct DataCategory_ {
 
 template <typename T> using DataCategory = typename DataCategory_<T>::type;
 
+template <typename T> struct IsIterator_ {
+    // SFINAE test
+    template <typename R>
+    static std::true_type
+    test(typename std::iterator_traits<R>::iterator_category*);
+
+    template <typename R> static std::false_type test(...);
+
+    static constexpr bool value = decltype(test<T>(nullptr))::value;
+};
+
+template <typename T> static constexpr bool IsIterator = IsIterator_<T>::value;
+
 } // namespace MetaNN
 
 #endif // METANN_DATA_FACILITIES_TRAITS_H

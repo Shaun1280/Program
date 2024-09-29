@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <MetaNN/data/batch/array.h>
 #include <MetaNN/data/batch/matrix.h>
 #include <MetaNN/data/facilities/continuous_memory.h>
 #include <MetaNN/data/facilities/lower_access.h>
@@ -23,8 +24,11 @@ int main() {
     auto zeroMatrix = MetaNN::ZeroMatrix<int, CPU>(3, 3);
     auto oneHotVector = MetaNN::OneHotVector<int, CPU>(3, 1);
     auto batchMatrix = MetaNN::Batch<int, CPU, CategoryTags::Matrix>(3, 3, 3);
+
     auto x = batchMatrix[2](1, 2);
     std::cout << x << std::endl;
+
+    auto array = MetaNN::Array<MetaNN::Matrix<int, CPU>>(3, 3);
     std::cout << "ok" << std::endl;
     return 0;
 }
