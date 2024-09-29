@@ -4,6 +4,7 @@
 #include <MetaNN/data/facilities/traits.h>
 #include <MetaNN/data/matrices/cpu_matrix.h>
 #include <MetaNN/data/matrices/matrices.h>
+#include <MetaNN/data/matrices/one_hot_vector.h>
 #include <MetaNN/data/matrices/trivial_matrix.h>
 #include <MetaNN/data/matrices/zero_matrix.h>
 
@@ -16,5 +17,6 @@ int main() {
     auto ptr = la.RawMemory();
     auto trivialMatrix = MetaNN::MakeTrivialMatrix<int, CPU>(3, 3, 1);
     auto zeroMatrix = MetaNN::ZeroMatrix<int, CPU>(3, 3);
+    auto oneHotVector = MetaNN::OneHotVector<int, CPU>(3, 1);
     return 0;
 }
