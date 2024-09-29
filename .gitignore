@@ -11,3 +11,4 @@ Python_code/DICOM/build
 Python_code/DICOM/*.spec
 Python_code/DICOM/analyzer/res_seg
 Python_code/DICOM/analyzer/score
+!/cpp/Template/include/MetaNN/*
