@@ -63,7 +63,7 @@ template <typename TElem> class Matrix<TElem, DeviceTags::CPU> {
            size_t p_rowNum, size_t p_colNum, size_t p_rowLen);
 
   private:
-    ContinousMemory<ElementType, DeviceType> m_mem;
+    ContinuousMemory<ElementType, DeviceType> m_mem;
     size_t m_rowNum;
     size_t m_colNum;
     size_t m_rowLen;

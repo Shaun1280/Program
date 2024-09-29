@@ -6,18 +6,18 @@
 
 namespace MetaNN {
 
-template <typename TElem, typename TDevice> class ContinousMemory {
+template <typename TElem, typename TDevice> class ContinuousMemory {
     static_assert(std::is_same_v<RemoveCVRef<TElem>, TElem>);
     using ElementType = TElem;
     using DeviceType = TDevice;
 
   public:
-    explicit ContinousMemory(std::size_t p_size)
+    explicit ContinuousMemory(std::size_t p_size)
         : m_mem(Allocator<TDevice>::template Allocate<TElem>(p_size)),
           m_memStart(m_mem.get()) {}
 
-    ContinousMemory(std::shared_ptr<ElementType> p_mem,
-                    std::size_t p_size) noexcept
+    ContinuousMemory(std::shared_ptr<ElementType> p_mem,
+                     std::size_t p_size) noexcept
         : m_mem(std::move(p_mem)), m_memStart(m_mem.get()) {}
 
     [[nodiscard]] auto RawMemory() const noexcept { return m_memStart; }
@@ -27,11 +27,11 @@ template <typename TElem, typename TDevice> class ContinousMemory {
         return m_mem;
     }
 
-    bool operator==(const ContinousMemory& rhs) const noexcept {
+    bool operator==(const ContinuousMemory& rhs) const noexcept {
         return m_mem == rhs.m_mem && m_memStart == rhs.m_memStart;
     }
 
-    bool operator!=(const ContinousMemory& rhs) const noexcept {
+    bool operator!=(const ContinuousMemory& rhs) const noexcept {
         return !(operator==(rhs));
     }
 
