@@ -17,8 +17,8 @@ template <typename TElem, typename TDevice> class ContinuousMemory {
           m_memStart(m_mem.get()) {}
 
     ContinuousMemory(std::shared_ptr<ElementType> p_mem,
-                     std::size_t p_size) noexcept
-        : m_mem(std::move(p_mem)), m_memStart(m_mem.get()) {}
+                     ElementType* p_memStart)
+        : m_mem(std::move(p_mem)), m_memStart(p_memStart) {}
 
     [[nodiscard]] auto RawMemory() const noexcept { return m_memStart; }
 

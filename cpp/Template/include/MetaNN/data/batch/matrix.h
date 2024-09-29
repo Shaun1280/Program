@@ -4,6 +4,7 @@
 #include <MetaNN/data/facilities/continuous_memory.h>
 #include <MetaNN/data/facilities/lower_access.h>
 #include <MetaNN/data/facilities/traits.h>
+#include <cassert>
 
 namespace MetaNN {
 
@@ -32,13 +33,13 @@ class Batch<TElement, TDevice, CategoryTags::Matrix> {
                (m_rawMatrixSize == val.m_rawMatrixSize);
     }
 
-    [[nodiscard]] template <typename TOtherType>
-    bool operator==(const TOtherType&) const noexcept {
+    template <typename TOtherType>
+    [[nodiscard]] bool operator==(const TOtherType&) const noexcept {
         return false;
     }
 
-    [[nodiscard]] template <typename TData>
-    bool operator!=(const TData& val) const noexcept {
+    template <typename TData>
+    [[nodiscard]] bool operator!=(const TData& val) const noexcept {
         return !(operator==(val));
     }
 
@@ -64,8 +65,8 @@ class Batch<TElement, TDevice, CategoryTags::Matrix> {
         assert(p_batchId < m_batchNum);
 
         auto pos = m_mem.RawMemory() + p_batchId * m_rawMatrixSize;
-        return Matrix<TElement, TDevice>(m_mem.SharedPtr(), pos, m_rowNum,
-                                         m_colNum, m_rowLen);
+        return Matrix<ElementType, DeviceType>(m_mem.SharedPtr(), pos, m_rowNum,
+                                               m_colNum, m_rowLen);
     }
 
     [[nodiscard]] auto SubBatchMatrix(size_t p_rowB, size_t p_rowE,

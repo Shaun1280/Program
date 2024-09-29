@@ -14,6 +14,10 @@ namespace MetaNN {
 template <typename TElem>
 struct LowerAccessImpl<Matrix<TElem, DeviceTags::CPU>>;
 
+// forward declaration
+template <typename TElem, typename TDevice>
+class Batch<TElem, TDevice, CategoryTags::Matrix>;
+
 // matrix class implementation
 template <typename TElem> class Matrix<TElem, DeviceTags::CPU> {
   public:
@@ -42,7 +46,7 @@ template <typename TElem> class Matrix<TElem, DeviceTags::CPU> {
 
     const auto operator()(size_t p_rowId, size_t p_colId) const noexcept {
         assert((p_rowId < m_rowNum) && (p_colId < m_colNum));
-        return m_mem[p_rowId * m_rowLen + p_colId];
+        return (m_mem.RawMemory())[p_rowId * m_rowLen + p_colId];
     }
 
     bool AvailableForWrite() const noexcept { return m_mem.UseCount() == 1; }
@@ -60,7 +64,9 @@ template <typename TElem> class Matrix<TElem, DeviceTags::CPU> {
   private:
     // private constructor
     Matrix(std::shared_ptr<ElementType> p_mem, ElementType* p_memStart,
-           size_t p_rowNum, size_t p_colNum, size_t p_rowLen);
+           size_t p_rowNum, size_t p_colNum, size_t p_rowLen)
+        : m_mem(p_mem, p_memStart), m_rowNum(p_rowNum), m_colNum(p_colNum),
+          m_rowLen(p_rowLen) {}
 
   private:
     ContinuousMemory<ElementType, DeviceType> m_mem;
