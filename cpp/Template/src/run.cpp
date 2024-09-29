@@ -5,6 +5,7 @@
 #include <MetaNN/data/matrices/cpu_matrix.h>
 #include <MetaNN/data/matrices/matrices.h>
 #include <MetaNN/data/matrices/trivial_matrix.h>
+#include <MetaNN/data/matrices/zero_matrix.h>
 
 using CPU = MetaNN::DeviceTags::CPU;
 
@@ -14,5 +15,6 @@ int main() {
     auto la = LowerAccess(matrix);
     auto ptr = la.RawMemory();
     auto trivialMatrix = MetaNN::MakeTrivialMatrix<int, CPU>(3, 3, 1);
+    auto zeroMatrix = MetaNN::ZeroMatrix<int, CPU>(3, 3);
     return 0;
 }
