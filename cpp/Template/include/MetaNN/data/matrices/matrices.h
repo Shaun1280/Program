@@ -9,7 +9,7 @@ namespace MetaNN {
 template <typename TElement, typename TDevice> class Matrix;
 
 template <typename TElement, typename TDevice>
-constexpr static bool IsMatrix<Matrix<TElement, TDevice>> = true;
+static constexpr bool IsMatrix<Matrix<TElement, TDevice>> = true;
 
 } // namespace MetaNN
 

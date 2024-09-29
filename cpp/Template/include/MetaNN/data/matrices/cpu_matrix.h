@@ -1,6 +1,7 @@
 #ifndef METANN_DATA_MATRICES_CPU_MATRIX_H
 #define METANN_DATA_MATRICES_CPU_MATRIX_H
 
+#include <MetaNN/data/batch/batch.h>
 #include <MetaNN/data/facilities/continuous_memory.h>
 #include <MetaNN/data/facilities/lower_access.h>
 #include <MetaNN/data/facilities/tags.h>
@@ -20,6 +21,7 @@ template <typename TElem> class Matrix<TElem, DeviceTags::CPU> {
     using DeviceType = DeviceTags::CPU;
 
     friend struct LowerAccessImpl<Matrix<ElementType, DeviceType>>;
+    friend class Batch<ElementType, DeviceType, CategoryTags::Matrix>;
 
   public:
     Matrix(size_t p_rowNum = 0, size_t p_colNum = 0)
