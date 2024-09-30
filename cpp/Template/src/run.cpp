@@ -29,6 +29,13 @@ int main() {
     std::cout << x << std::endl;
 
     auto array = MetaNN::Array<MetaNN::Matrix<int, CPU>>(3, 3);
+
+    std::vector<MetaNN::Matrix<int, CPU>> vec;
+    vec.push_back(matrix);
+    MetaNN::Array<MetaNN::Matrix<int, CPU>> array2(vec.begin(), vec.end());
+
+    auto array3 = MakeArray(vec.begin(), vec.end());
+
     std::cout << "ok" << std::endl;
     return 0;
 }

@@ -1,7 +1,14 @@
 #ifndef METANN_DATA_BATCH_ARRAY_H
 #define METANN_DATA_BATCH_ARRAY_H
 
+/**
+ * @file array.h
+ * This file provides the implementation of Array, which is a dynamic batch of
+ * data.
+ */
+
 #include <MetaNN/data/facilities/traits.h>
+#include <MetaNN/facilities/traits.h>
 #include <cassert>
 #include <memory>
 #include <vector>
@@ -137,6 +144,13 @@ template <typename TData> class ArrayImpl<TData, CategoryTags::Matrix> {
 };
 
 template <typename TData> class ArrayImpl<TData, CategoryTags::Scalar> {};
+
+template <typename TIterator> auto MakeArray(TIterator begin, TIterator end) {
+    using ElementType = typename std::iterator_traits<TIterator>::value_type;
+    using RawData = RemoveCVRef<ElementType>;
+
+    return Array<RawData>(begin, end);
+}
 
 } // namespace MetaNN
 
