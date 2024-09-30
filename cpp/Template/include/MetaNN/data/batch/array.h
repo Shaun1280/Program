@@ -19,7 +19,8 @@ template <typename TData, typename TDataCate> class ArrayImpl;
 
 // Array accepts Matrix, Scalar, ...
 // Should have different behaviors for different data categories
-template <typename TData> class Array : ArrayImpl<TData, DataCategory<TData>> {
+template <typename TData>
+class Array : public ArrayImpl<TData, DataCategory<TData>> {
   public:
     using ElementType = typename TData::ElementType;
     using DeviceType = typename TData::DeviceType;
@@ -30,11 +31,11 @@ template <typename TData> class Array : ArrayImpl<TData, DataCategory<TData>> {
 
 // If element type is matrix, then the array is batch matrix
 template <typename TData>
-constexpr bool IsBatchMatrix<Array<TData>> = IsMatrix<TData>;
+static constexpr bool IsBatchMatrix<Array<TData>> = IsMatrix<TData>;
 
 // If element type is scalar, then the array is batch scalar
 template <typename TData>
-constexpr bool IsBatchScalar<Array<TData>> = IsScalar<TData>;
+static constexpr bool IsBatchScalar<Array<TData>> = IsScalar<TData>;
 
 template <typename TData> class ArrayImpl<TData, CategoryTags::Matrix> {
   public:
