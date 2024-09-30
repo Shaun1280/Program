@@ -115,7 +115,7 @@ template <typename TData> class ArrayImpl<TData, CategoryTags::Matrix> {
     [[nodiscard]] auto end() const { return m_buffer->end(); }
 
     [[nodiscard]] bool operator==(const Array<TData>& val) const noexcept {
-        auto tmp =
+        decltype(auto) tmp =
             static_cast<const ArrayImpl<TData, CategoryTags::Matrix>&>(val);
         return m_buffer == tmp.m_buffer;
     }
@@ -143,7 +143,85 @@ template <typename TData> class ArrayImpl<TData, CategoryTags::Matrix> {
     // m_evalBuf;
 };
 
-template <typename TData> class ArrayImpl<TData, CategoryTags::Scalar> {};
+template <typename TData> class ArrayImpl<TData, CategoryTags::Scalar> {
+  public:
+    using ElementType = typename TData::ElementType;
+    using DeviceType = typename TData::DeviceType;
+
+  public:
+    ArrayImpl(size_t rowNum = 0, size_t colNum = 0)
+        : m_buffer(new std::vector<TData>()) {}
+
+    template <typename TIterator,
+              std::enable_if_t<IsIterator<TIterator>, bool> = true>
+    ArrayImpl(TIterator b, TIterator e)
+        : m_buffer(new std::vector<TData>(b, e)) {}
+
+  public:
+    [[nodiscard]] size_t BatchNum() const noexcept { return m_buffer->size(); }
+
+    [[nodiscard]] size_t size() const noexcept { return m_buffer->size(); }
+
+    void push_back(TData mat) {
+        assert(AvailableForWrite());
+        m_buffer->emplace_back(std::move(mat));
+    }
+
+    template <typename... TArgs> void emplace_back(TArgs&&... args) {
+        assert(AvailableForWrite());
+        TData tmp(std::forward<TArgs>(args)...);
+        m_buffer->emplace_back(std::move(tmp));
+    }
+
+    void reserve(size_t num) {
+        assert(AvailableForWrite());
+        m_buffer->reserve(num);
+    }
+
+    void clear() {
+        assert(AvailableForWrite());
+        m_buffer->clear();
+    }
+
+    [[nodiscard]] bool empty() const { return m_buffer->empty(); }
+
+    [[nodiscard]] const auto& operator[](size_t id) const {
+        return (*m_buffer)[id];
+    }
+
+    [[nodiscard]] auto& operator[](size_t id) { return (*m_buffer)[id]; }
+
+    [[nodiscard]] auto begin() { return m_buffer->begin(); }
+    [[nodiscard]] auto begin() const { return m_buffer->begin(); }
+    [[nodiscard]] auto end() { return m_buffer->end(); }
+    [[nodiscard]] auto end() const { return m_buffer->end(); }
+
+    [[nodiscard]] bool operator==(const Array<TData>& val) const noexcept {
+        decltype(auto) tmp =
+            static_cast<const ArrayImpl<TData, CategoryTags::Scalar>&>(val);
+        return m_buffer == tmp.m_buffer;
+    }
+
+    template <typename TOtherType>
+    [[nodiscard]] bool operator==(const TOtherType&) const noexcept {
+        return false;
+    }
+
+    template <typename TCompData>
+    [[nodiscard]] bool operator!=(const TCompData& val) const noexcept {
+        return !(operator==(val));
+    }
+
+    [[nodiscard]] bool AvailableForWrite() const {
+        return m_buffer.use_count() == 1;
+        // return (!m_evalBuf.IsEvaluated()) && (m_buffer.use_count() == 1);
+    }
+
+  protected:
+    std::shared_ptr<std::vector<TData>> m_buffer;
+    // EvalBuffer<Batch<ElementType, DeviceType, CategoryTags::Scalar>>
+    // m_evalBuf;
+};
 
 template <typename TIterator> auto MakeArray(TIterator begin, TIterator end) {
     using ElementType = typename std::iterator_traits<TIterator>::value_type;

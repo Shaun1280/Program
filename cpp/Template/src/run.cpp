@@ -36,6 +36,8 @@ int main() {
 
     auto array3 = MakeArray(vec.begin(), vec.end());
 
+    auto array4 = MetaNN::Array<MetaNN::Scalar<int, CPU>>(3, 3);
+
     std::cout << "ok" << std::endl;
     return 0;
 }
