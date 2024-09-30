@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <MetaNN/data/batch/array.h>
+#include <MetaNN/data/batch/duplicate.h>
 #include <MetaNN/data/batch/matrix.h>
 #include <MetaNN/data/facilities/continuous_memory.h>
 #include <MetaNN/data/facilities/lower_access.h>
@@ -33,10 +34,17 @@ int main() {
     std::vector<MetaNN::Matrix<int, CPU>> vec;
     vec.push_back(matrix);
     MetaNN::Array<MetaNN::Matrix<int, CPU>> array2(vec.begin(), vec.end());
-
-    auto array3 = MakeArray(vec.begin(), vec.end());
-
+    auto array3 = MetaNN::MakeArray(vec.begin(), vec.end());
     auto array4 = MetaNN::Array<MetaNN::Scalar<int, CPU>>(3, 3);
+
+    MetaNN::ZeroMatrix<int, CPU> mat(100, 200);
+    auto batch_matrix0 = MetaNN::MakeDuplicate(10, mat);
+
+    auto batch_matrix1 =
+        MetaNN::MakeDuplicate<MetaNN::ZeroMatrix<int, CPU>>(10, 100, 200);
+
+    MetaNN::Scalar<int, CPU> scalar(0);
+    auto batch_scalar0 = MetaNN::MakeDuplicate(10, scalar);
 
     std::cout << "ok" << std::endl;
     return 0;

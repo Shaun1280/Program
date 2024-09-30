@@ -226,9 +226,9 @@ template <typename TData> class ArrayImpl<TData, CategoryTags::Scalar> {
 
 template <typename TIterator> auto MakeArray(TIterator begin, TIterator end) {
     using ElementType = typename std::iterator_traits<TIterator>::value_type;
-    using RawData = RemoveCVRef<ElementType>;
+    using RawDataType = RemoveCVRef<ElementType>;
 
-    return Array<RawData>(begin, end);
+    return Array<RawDataType>(begin, end);
 }
 
 } // namespace MetaNN
