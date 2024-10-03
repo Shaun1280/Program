@@ -72,17 +72,6 @@ class Vector : private Allocator {
         ++m_size;
     }
 
-    /*
-    template<typename... Args>
-    void emplace_back(Args&&... args) {
-        if (m_size >= m_capacity) {
-            reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
-        }
-
-        ++m_size;
-    }
-    */
-
     // Emplace back
     template <typename... Args> void emplace_back(Args&&... args) {
         if (m_size >= m_capacity) {
@@ -141,6 +130,13 @@ class Vector : private Allocator {
         deallocate();
         m_data = new_data;
         m_capacity = new_capacity;
+
+        // T* new_data = static_cast<T*>(::operator new(new_capacity *
+        // sizeof(T))); for (size_t i = 0; i < m_size; ++i) {
+        //     new (new_data + i) T(std::move(m_data[i]));
+        //     m_data[i].~T();
+        // }
+        // ::operator delete(m_data);
     }
 };
 
