@@ -116,6 +116,10 @@ class Vector : private Allocator {
     void deallocate() {
         if (m_data) {
             AllocatorTraits::deallocate(get_allocator(), m_data, m_capacity);
+            // for (size_t i = 0; i < m_size; ++i) {
+            //     m_data[i].~T();
+            // }
+            // ::operator delete(m_data);
             m_data = nullptr;
         }
     }
