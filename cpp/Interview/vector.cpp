@@ -66,6 +66,9 @@ class Vector : private Allocator {
         }
         AllocatorTraits::construct(get_allocator(), m_data + m_size,
                                    std::move(value));
+        // equal to 使用 placement new 在 m_data + m_size 的位置上直接构造对象
+        // new (place) T(args...)
+        // new (m_data + m_size) T(std::forward<Args>(args)...);
         ++m_size;
     }
 
@@ -75,9 +78,7 @@ class Vector : private Allocator {
         if (m_size >= m_capacity) {
             reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
         }
-        // 使用 placement new 在 m_data + m_size 的位置上直接构造对象
-        // new (place) T(args...)
-        new (m_data + m_size) T(std::forward<Args>(args)...);
+
         ++m_size;
     }
     */
