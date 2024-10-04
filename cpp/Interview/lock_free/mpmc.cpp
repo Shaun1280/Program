@@ -1,5 +1,6 @@
 #include <atomic>
 #include <cassert>
+#include <iostream>
 #include <thread>
 #include <vector>
 
@@ -72,8 +73,9 @@ int main() {
                 while (!queue.enqueue(i * 10 + j)) {
                     // busy-wait if the queue is full
                 }
-                std::cout << "Producer " << i << " produced: " << i * 10 + j
-                          << std::endl;
+                std::cout << "Producer " + std::to_string(i) +
+                                 " produced: " + std::to_string(i * 10 + j) +
+                                 "\n";
             }
         });
     }
@@ -87,8 +89,8 @@ int main() {
                 while (!queue.dequeue(item)) {
                     // busy-wait if the queue is empty
                 }
-                std::cout << "Consumer " << i << " consumed: " << item
-                          << std::endl;
+                std::cout << "Consumer " + std::to_string(i) +
+                                 " consumed: " + std::to_string(item) + "\n";
             }
         });
     }
