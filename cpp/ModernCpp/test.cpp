@@ -2,35 +2,40 @@
 
 using namespace std;
 
-int main() {
-    int n = 10;
-    vector<vector<int>> matrix(n, vector<int>(n));
-    int x = 0, y = n - 1;
-    int num = 1;
-    while (num <= n * n) {
-        if (((y - x) & 1) != ((n - 1) & 1)) {
-            while (x <= n - 1 && y <= n - 1)
-                matrix[x++][y++] = num++;
-            if (x > n - 1)
-                y -= 2, x -= 1;
-            else
-                y -= 1;
-        } else {
-            while (x >= 0 && y >= 0)
-                matrix[x--][y--] = num++;
-            if (y < 0)
-                x += 2, y += 1;
-            else
-                x += 1;
-        }
-    }
+class Solution {
+  private:
+    
+    int getPrimes() {
 
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            cout << matrix[i][j] << " ";
-        }
-        cout << "\n";
     }
+  public:
+    vector<int> gcdValues(vector<int>& nums, vector<long long>& queries) {
+        int mx = *max_element(nums.begin(), nums.end());
+
+        vector<vector<int>> primes(mx + 1);
+        for (int x = 2; x <= mx; ++x) {
+            int tmp = x, p = 2;
+            while (p * p <= tmp) {
+                if (tmp % p == 0) {
+                    primes[x].push_back(p);
+                    while (tmp % p == 0) {
+                        tmp /= p;
+                    }
+                }
+                ++p;
+            }
+            if (tmp > 1) {
+                primes[x].push_back(tmp);
+            }
+        }
+    }
+};
+
+int main() {
+    Solution sln;
+    vector<int> nums = {2, 3, 4};
+    vector<long long> queries = {0, 2, 2};
+    sln.gcdValues(nums, queries);
     return 0;
 }
 

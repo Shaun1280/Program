@@ -13,20 +13,29 @@ template <typename T> class SPSCQueue {
 
     bool enqueue(const T& item) {
         size_t tail = m_tail.load(std::memory_order_relaxed);
-        size_t head = m_head.load(std::memory_order_acquire);
+        size_t head = m_head.load(
+            std::memory_order_acquire); // (1) Ensures that all subsequent
+                                        // memory operations in this thread
+                                        // cannot be reordered to before this
+                                        // load.
 
         if ((tail + 1) % m_capacity == head) {
             return false;
         }
 
         m_buffer[tail] = item;
-        m_tail.store((tail + 1) % m_capacity, std::memory_order_release);
+
+        // (2) sync with (3)
+        m_tail.store((tail + 1) % m_capacity,
+                     std::memory_order_release); // (2) Ensures that all memory
+                                                 // operations before this store
+                                                 // are completed
         return true;
     }
 
     bool dequeue(T& item) {
         size_t head = m_head.load(std::memory_order_relaxed);
-        size_t tail = m_tail.load(std::memory_order_acquire);
+        size_t tail = m_tail.load(std::memory_order_acquire); // (3)
 
         if (head == tail) {
             return false;
@@ -34,7 +43,8 @@ template <typename T> class SPSCQueue {
 
         item = m_buffer[head];
 
-        m_head.store((head + 1) % m_capacity, std::memory_order_release);
+        // (4) sync with (1)
+        m_head.store((head + 1) % m_capacity, std::memory_order_release); // (4)
         return true;
     }
 

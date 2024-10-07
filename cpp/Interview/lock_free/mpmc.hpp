@@ -8,60 +8,27 @@ template <typename T, size_t capacity> class MPMCLockFreeRingBuffer {
   public:
     MPMCLockFreeRingBuffer()
         : capacity_(capacity), buffer_(capacity), head_(0), tail_(0) {
-        // capacity must be greater than 1 and a power of 2 for this
-        // implementation
         assert((capacity > 1));
-    }
-
-    // Enqueue an item to the queue (tail increases)
-    bool enqueue(const T& item) {
-        size_t tail;
-        size_t next_tail;
-
-        while (op_.load()) {
-        }
-        op_.store(true);
-
-        do {
-            tail = tail_.load(std::memory_order_relaxed);
-            next_tail = (tail + 1) % capacity_;
-
-            size_t head = head_.load(std::memory_order_acquire);
-            if (next_tail == head) {
-                return false; // Queue is full
-            }
-        } while (!tail_.compare_exchange_weak(tail, next_tail,
-                                              std::memory_order_release,
-                                              std::memory_order_relaxed));
-
-        buffer_[tail] = item; // Store the item at the current tail position
-        op_.store(false);
-        return true;
     }
 
     template <typename... Args> bool emplace(Args&&... args) {
         size_t tail;
         size_t next_tail;
 
-        while (op_.load()) {
-        }
-        op_.store(true);
-
         do {
             tail = tail_.load(std::memory_order_relaxed);
-            next_tail = (tail + 1) % capacity_;
-
             size_t head = head_.load(std::memory_order_acquire);
+
+            next_tail = (tail + 1) % capacity_;
             if (next_tail == head) {
                 return false; // Queue is full
             }
         } while (!tail_.compare_exchange_weak(tail, next_tail,
-                                              std::memory_order_release,
-                                              std::memory_order_relaxed));
+                                              std::memory_order_acq_rel));
 
         buffer_[tail] = T(std::forward<Args>(
             args)...); // Store the item at the current tail position
-        op_.store(false);
+
         return true;
     }
 
@@ -69,10 +36,6 @@ template <typename T, size_t capacity> class MPMCLockFreeRingBuffer {
     bool pop(T& item) {
         size_t head;
         size_t next_head;
-
-        while (op_.load()) {
-        }
-        op_.store(true);
 
         do {
             head = head_.load(std::memory_order_relaxed);
@@ -86,20 +49,18 @@ template <typename T, size_t capacity> class MPMCLockFreeRingBuffer {
             item = buffer_[head]; // Load the item at the current head
                                   // position
         } while (!head_.compare_exchange_weak(head, next_head,
-                                              std::memory_order_release,
-                                              std::memory_order_relaxed));
+                                              std::memory_order_acq_rel));
 
-        op_.store(false);
         return true;
     }
 
-    size_t size() const {
+    size_t size() {
         size_t head = head_.load(std::memory_order_acquire);
         size_t tail = tail_.load(std::memory_order_acquire);
         return (capacity_ + tail - head) % capacity_;
     }
 
-    bool empty() const {
+    bool empty() {
         return head_.load(std::memory_order_acquire) ==
                tail_.load(std::memory_order_acquire);
     }
@@ -111,7 +72,6 @@ template <typename T, size_t capacity> class MPMCLockFreeRingBuffer {
         head_; // Index for the next dequeue (multi-consumer safe)
     std::atomic<size_t>
         tail_; // Index for the next enqueue (multi-producer safe)
-    std::atomic<bool> op_;
 };
 
 // int main() {
