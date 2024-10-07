@@ -18,7 +18,8 @@ TEST(MPMCQueueTest, Push) {
     for (int i = 0; i < 1023; ++i) {
         ASSERT_TRUE(q.emplace(i, i + 1));
     }
-    ASSERT_FALSE(q.emplace(1023, 1024));
+    ASSERT_TRUE(q.emplace(1023, 1024));
+    ASSERT_FALSE(q.emplace(1024, 1025));
 }
 
 TEST(MPMCQueueTest, Pop) {
@@ -42,13 +43,13 @@ TEST(MPMCQueueTest, Size) {
         ASSERT_TRUE(q.emplace(i, i + 1));
         ASSERT_EQ(q.size(), i + 1);
     }
-    ASSERT_FALSE(q.emplace(1023, 1024));
-    ASSERT_EQ(q.size(), 1023);
+    ASSERT_TRUE(q.emplace(1023, 1024));
+    ASSERT_EQ(q.size(), 1024);
 
-    for (int i = 0; i < 1023; ++i) {
+    for (int i = 0; i < 1024; ++i) {
         Item item;
         ASSERT_TRUE(q.pop(item));
-        ASSERT_EQ(q.size(), 1023 - i - 1);
+        ASSERT_EQ(q.size(), 1024 - i - 1);
     }
 }
 

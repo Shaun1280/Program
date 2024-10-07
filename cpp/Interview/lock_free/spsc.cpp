@@ -7,7 +7,8 @@
 template <typename T> class SPSCQueue {
   public:
     SPSCQueue(size_t capacity)
-        : m_capacity(capacity), m_buffer(capacity), m_head(0), m_tail(0) {
+        : m_capacity(capacity + 1), m_buffer(capacity + 1), m_head(0),
+          m_tail(0) {
         assert(capacity > 1);
     }
 
