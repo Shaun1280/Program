@@ -2,46 +2,30 @@
 
 using namespace std;
 
-class Solution {
-  private:
-    
-    int getPrimes() {
-
-    }
-  public:
-    vector<int> gcdValues(vector<int>& nums, vector<long long>& queries) {
-        int mx = *max_element(nums.begin(), nums.end());
-
-        vector<vector<int>> primes(mx + 1);
-        for (int x = 2; x <= mx; ++x) {
-            int tmp = x, p = 2;
-            while (p * p <= tmp) {
-                if (tmp % p == 0) {
-                    primes[x].push_back(p);
-                    while (tmp % p == 0) {
-                        tmp /= p;
-                    }
-                }
-                ++p;
-            }
-            if (tmp > 1) {
-                primes[x].push_back(tmp);
-            }
-        }
-    }
-};
-
 int main() {
-    Solution sln;
-    vector<int> nums = {2, 3, 4};
-    vector<long long> queries = {0, 2, 2};
-    sln.gcdValues(nums, queries);
+    // vector<int> arr = {10, 5, 2, 6}; // 100 5 100 6
+    vector<int> arr = {100, 5, 100, 6};
+    int k = 100; // 8
+
+    int n = arr.size();
+    int mul = 1;
+    long long ans = 0;
+    for (int l = 0, r = -1; l < n; ++l) {
+        if (r < l) {
+            mul *= arr[l];
+            r = l + 1;
+        }
+        // cout << l << " " << r << " " << mul << endl;
+        while (r < n && mul * arr[r] < k) {
+            mul *= arr[r];
+            ++r;
+        }
+        if (mul < k) {
+            ans += (r - l);
+        }
+        // cout << l << " " << r << " " << mul << endl;
+        mul /= arr[l];
+    }
+    cout << ans << endl;
     return 0;
 }
-
-/*
-1
-10
-1 -1 2 2 3 -3 4 -4 5 -5
-
-*/

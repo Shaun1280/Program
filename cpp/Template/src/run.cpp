@@ -12,9 +12,15 @@
 #include <MetaNN/data/matrices/one_hot_vector.h>
 #include <MetaNN/data/matrices/trivial_matrix.h>
 #include <MetaNN/data/matrices/zero_matrix.h>
+#include <MetaNN/operators/facilities/category_cal.h>
+#include <MetaNN/operators/facilities/tags.h>
 
 using CPU = MetaNN::DeviceTags::CPU;
 using CategoryTags = MetaNN::CategoryTags;
+
+using ADD = MetaNN::BinaryOpTags::Add;
+using OperCate = MetaNN::OperCateCal<ADD, MetaNN::Matrix<int, CPU>,
+                                     MetaNN::TrivialMatrix<int, CPU>>;
 
 int main() {
     MetaNN::ContinuousMemory<int, CPU> memory(10);

@@ -7,7 +7,8 @@
 namespace MetaNN {
 namespace NStrivialMatrix {} // namespace NStrivialMatrix
 
-template <typename TElem, typename TDevice, typename TScalar>
+template <typename TElem, typename TDevice,
+          typename TScalar = Scalar<TElem, DeviceTags::CPU>>
 class TrivialMatrix {
   public:
     using ElementType = TElem;
