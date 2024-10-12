@@ -13,6 +13,7 @@
 #include <MetaNN/data/matrices/trivial_matrix.h>
 #include <MetaNN/data/matrices/zero_matrix.h>
 #include <MetaNN/operators/facilities/category_cal.h>
+#include <MetaNN/operators/facilities/organizer.h>
 #include <MetaNN/operators/facilities/tags.h>
 
 using CPU = MetaNN::DeviceTags::CPU;
@@ -51,6 +52,9 @@ int main() {
 
     MetaNN::Scalar<int, CPU> scalar(0);
     auto batch_scalar0 = MetaNN::MakeDuplicate(10, scalar);
+
+    auto organizer =
+        MetaNN::OperOrganizer<ADD, CategoryTags::Matrix>(matrix, matrix);
 
     std::cout << "ok" << std::endl;
     return 0;
