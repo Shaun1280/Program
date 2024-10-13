@@ -15,6 +15,7 @@
 #include <MetaNN/operators/facilities/category_cal.h>
 #include <MetaNN/operators/facilities/organizer.h>
 #include <MetaNN/operators/facilities/tags.h>
+#include <MetaNN/operators/operators.h>
 
 using CPU = MetaNN::DeviceTags::CPU;
 using CategoryTags = MetaNN::CategoryTags;

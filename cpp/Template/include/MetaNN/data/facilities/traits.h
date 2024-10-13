@@ -51,7 +51,7 @@ template <typename T> static constexpr bool IsMatrix<T&> = IsMatrix<T>;
 template <typename T> static constexpr bool IsMatrix<T&&> = IsMatrix<T>;
 
 /// is batch scalar
-template <typename T> constexpr bool IsBatchScalar = false;
+template <typename T> static constexpr bool IsBatchScalar = false;
 
 template <typename T>
 static constexpr bool IsBatchScalar<const T> = IsBatchScalar<T>;
@@ -60,31 +60,29 @@ template <typename T>
 static constexpr bool IsBatchScalar<T&> = IsBatchScalar<T>;
 
 template <typename T>
-constexpr static bool IsBatchScalar<const T&> = IsBatchScalar<T>;
+static constexpr bool IsBatchScalar<const T&> = IsBatchScalar<T>;
 
 template <typename T>
-constexpr static bool IsBatchScalar<T&&> = IsBatchScalar<T>;
+static constexpr bool IsBatchScalar<T&&> = IsBatchScalar<T>;
 
 template <typename T>
-constexpr static bool IsBatchScalar<const T&&> = IsBatchScalar<T>;
+static constexpr bool IsBatchScalar<const T&&> = IsBatchScalar<T>;
 
 // is batch matrix
-template <typename T> constexpr static bool IsBatchMatrix = false;
+template <typename T> static constexpr bool IsBatchMatrix = false;
+
+template <typename T> constexpr bool IsBatchMatrix<const T> = IsBatchMatrix<T>;
 
 template <typename T>
-constexpr static bool IsBatchMatrix<const T> = IsBatchMatrix<T>;
+static constexpr bool IsBatchMatrix<T&> = IsBatchMatrix<T>;
+
+template <typename T> constexpr bool IsBatchMatrix<const T&> = IsBatchMatrix<T>;
 
 template <typename T>
-constexpr static bool IsBatchMatrix<T&> = IsBatchMatrix<T>;
+static constexpr bool IsBatchMatrix<T&&> = IsBatchMatrix<T>;
 
 template <typename T>
-constexpr static bool IsBatchMatrix<const T&> = IsBatchMatrix<T>;
-
-template <typename T>
-constexpr static bool IsBatchMatrix<T&&> = IsBatchMatrix<T>;
-
-template <typename T>
-constexpr bool static IsBatchMatrix<const T&&> = IsBatchMatrix<T>;
+static constexpr bool IsBatchMatrix<const T&&> = IsBatchMatrix<T>;
 
 // full specialization is not allowed within a non-fully specialized outer
 // template.
