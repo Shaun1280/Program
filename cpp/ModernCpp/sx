@@ -1,0 +1,116 @@
+class Solution {
+    public:
+        vector<long long> findXSum(vector < int >& nums, int k, int x) {
+    set < pair < int, int >> s_x, s_n_x;
+    map < int, int > freq;
+        int n = nums.size();
+        long long sum = 0;
+
+        auto increase_freq = [&](int val) {
+        if (!s_x.count({ freq[val], val })) {
+            if (s_x.size() < x) {
+                s_x.insert({ freq[val] + 1, val });
+                sum += 1LL * (freq[val] + 1) * val;
+            } else {
+                    auto it = s_x.begin();
+                if (* it < make_pair(freq[val] + 1, val)) {
+                    auto[f, v] = * it;
+                    s_x.erase(it);
+                    s_n_x.erase({ freq[val], val });
+                    sum -= 1LL * f * v;
+
+                    s_x.insert({ freq[val] + 1, val });
+                    sum += 1LL * (freq[val] + 1) * val;
+
+                    s_n_x.insert({ f, v });
+                } else {
+                    s_n_x.erase({ freq[val], val });
+                    s_n_x.insert({ freq[val] + 1, val });
+                }
+            }
+        } else {
+                auto it = s_x.find({ freq[val], val });
+            s_x.erase(it);
+            sum -= 1LL * freq[val] * val;
+
+            s_x.insert({ freq[val] + 1, val });
+            sum += 1LL * (freq[val] + 1) * val;
+        }
+        ++freq[val];
+    };
+
+        auto decrease_freq = [&](int val) {
+        if (s_x.count({ freq[val], val })) {
+            if (s_n_x.size() > 0) {
+                    auto it = prev(s_n_x.end());
+                if (* it > make_pair(freq[val] - 1, val)) {
+                    auto[f, v] = * it;
+                    s_n_x.erase(it);
+                    s_x.erase({ freq[val], val });
+                    sum += 1LL * f * v;
+                    sum -= 1LL * freq[val] * val;
+
+                    if (freq[val] - 1 > 0) {
+                        s_n_x.insert({ freq[val] - 1, val });
+                    }
+                    s_x.insert({ f, v });
+                } else {
+                    s_x.erase({ freq[val], val });
+                    sum -= 1LL * freq[val] * val;
+                    if (freq[val] - 1 > 0) {
+                        s_x.insert({ freq[val] - 1, val });
+                    }
+                    sum += 1LL * (freq[val] - 1) * val;
+                }
+            } else {
+                s_x.erase({ freq[val], val });
+                sum -= 1LL * freq[val] * val;
+                if (freq[val] - 1 > 0) {
+                    s_x.insert({ freq[val] - 1, val });
+                }
+                sum += 1LL * (freq[val] - 1) * val;
+            }
+        } else {
+            s_n_x.erase({ freq[val], val });
+            if (freq[val] - 1 > 0) {
+                s_n_x.insert({ freq[val] - 1, val });
+            }
+        }
+        --freq[val];
+    };
+
+    for (int i = 0; i < k; ++i) {
+        increase_freq(nums[i]);
+    }
+
+    // for (auto [f, v] : s_x) {
+    //     cout << v << ":" << f << ", ";
+    // }
+
+    // for (auto [f, v] : s_n_x) {
+    //     cout << v << ":" << f << ", ";
+    // }
+
+    // cout << "\n";
+
+    vector < long long > ans;
+    ans.push_back(sum);
+    for (int i = k; i < n; ++i) {
+        decrease_freq(nums[i - k]);
+        increase_freq(nums[i]);
+        ans.push_back(sum);
+
+        // for (auto [f, v] : s_x) {
+        //     cout << v << ":" << f << ", ";
+        // }
+
+        // for (auto [f, v] : s_n_x) {
+        //     cout << v << ":" << f << ", ";
+        // }
+
+        // cout << "\n";
+    }
+
+    return ans;
+}
+};

@@ -1,31 +1,28 @@
-#include <bits/stdc++.h>
+class Solution {
+    static int* divisor;
 
-using namespace std;
+  public:
+    int minOperations(vector<int>& nums) {
+        int n = nums.size();
+        if (divisor == nullptr) {
+            divisor = new int[1000001];
+            for (int i = 1; i <= 1000000; ++i) {
+                for (int j = i + i; j <= 1000000; j += i) {
+                    divisor[j] = max(divisor[j], i);
+                }
+            }
+        }
 
-int main() {
-    // vector<int> arr = {10, 5, 2, 6}; // 100 5 100 6
-    vector<int> arr = {100, 5, 100, 6};
-    int k = 100; // 8
-
-    int n = arr.size();
-    int mul = 1;
-    long long ans = 0;
-    for (int l = 0, r = -1; l < n; ++l) {
-        if (r < l) {
-            mul *= arr[l];
-            r = l + 1;
+        int ans = 0;
+        for (int i = n - 2; i >= 0; --i) {
+            while (nums[i] > nums[i + 1]) {
+                if (divisor[nums[i]] == 1)
+                    return -1;
+                nums[i] /= divisor[nums[i]];
+                ans++;
+            }
         }
-        // cout << l << " " << r << " " << mul << endl;
-        while (r < n && mul * arr[r] < k) {
-            mul *= arr[r];
-            ++r;
-        }
-        if (mul < k) {
-            ans += (r - l);
-        }
-        // cout << l << " " << r << " " << mul << endl;
-        mul /= arr[l];
+        return ans;
     }
-    cout << ans << endl;
-    return 0;
-}
+};
+int* Solution::divisor = nullptr;
