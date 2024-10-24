@@ -3,6 +3,7 @@
 
 #include <MetaNN/data/facilities/tags.h>
 #include <MetaNN/data/facilities/traits.h>
+#include <MetaNN/facilities/traits.h>
 #include <MetaNN/operators/facilities/category_cal.h>
 #include <MetaNN/operators/facilities/oper_seq.h>
 #include <MetaNN/operators/facilities/organizer.h>
@@ -11,7 +12,40 @@
 
 namespace MetaNN {
 
-template <typename TOpTag, typename TData> class UnaryOp;
+// TOpTag: Operation Tag; OperOrganizer provides dim interfaces
+template <typename TOpTag, typename TData>
+class UnaryOp : public OperOrganizer<TOpTag, OperCateCal<TOpTag, TData>> {
+    static_assert(std::is_same_v<RemoveCVRef<TData>, TData>,
+                  "TData is not available type");
+    using Cate = OperCateCal<TOpTag, TData>;
+
+  public:
+    using ElementTpype = typename OperElementType_<TOpTag, TData>::type;
+    using DeviceType = typename OperDeviceType_<TOpTag, TData>::type;
+
+  public:
+    UnaryOp(TData p_data)
+        : OperOrganizer<TOpTag, Cate>(p_data), m_data(std::move(p_data)) {}
+
+    [[nodiscard]] bool operator==(const UnaryOp& val) const {
+        return m_data == val.data;
+    }
+
+    template <typename TOtherData>
+    [[nodiscard]] bool operator==(const TOtherData& val) const {
+        return false;
+    }
+
+    template <typename TOtherData>
+    [[nodiscard]] bool operator!=(const TOtherData& val) const {
+        return !(operator==(val));
+    }
+
+    [[nodiscard]] const TData& Operand() const { return m_data; }
+
+  private:
+    TData m_data;
+};
 
 template <typename TOpTag, typename TData1, typename TData2> class BinaryOp;
 

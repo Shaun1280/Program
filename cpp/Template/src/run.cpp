@@ -15,14 +15,20 @@
 #include <MetaNN/operators/facilities/category_cal.h>
 #include <MetaNN/operators/facilities/organizer.h>
 #include <MetaNN/operators/facilities/tags.h>
+#include <MetaNN/operators/facilities/traits.h>
 #include <MetaNN/operators/operators.h>
+#include <MetaNN/operators/sigmoid.h>
 
 using CPU = MetaNN::DeviceTags::CPU;
 using CategoryTags = MetaNN::CategoryTags;
 
 using ADD = MetaNN::BinaryOpTags::Add;
+using Sigmoid = MetaNN::UnaryOpTags::Sigmoid;
 using OperCate = MetaNN::OperCateCal<ADD, MetaNN::Matrix<int, CPU>,
                                      MetaNN::TrivialMatrix<int, CPU>>;
+
+using ResType =
+    MetaNN::UnaryOp<MetaNN::UnaryOpTags::Sigmoid, MetaNN::Matrix<int, CPU>>;
 
 int main() {
     MetaNN::ContinuousMemory<int, CPU> memory(10);
@@ -56,6 +62,13 @@ int main() {
 
     auto organizer =
         MetaNN::OperOrganizer<ADD, CategoryTags::Matrix>(matrix, matrix);
+
+    auto organizer_sigmoid =
+        MetaNN::OperOrganizer<Sigmoid, CategoryTags::Matrix>(matrix);
+
+    std::cout << MetaNN::IsMatrix<decltype(matrix)> << std::endl;
+    /// auto sigmoid = MetaNN::Sigmoid(matrix);
+    auto ret = ResType(matrix);
 
     std::cout << "ok" << std::endl;
     return 0;
