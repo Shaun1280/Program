@@ -45,7 +45,7 @@ template <typename TOpTag, typename TCateContainer> struct CateInduce_;
 
 template <typename TOpTag, typename... TCates>
 struct CateInduce_<TOpTag, std::tuple<TCates...>> {
-    using type = OperCategory_<TOpTag, TCates...>;
+    using type = typename OperCategory_<TOpTag, TCates...>::type;
 };
 
 } // namespace NSOperCateCal

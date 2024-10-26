@@ -67,8 +67,7 @@ int main() {
         MetaNN::OperOrganizer<Sigmoid, CategoryTags::Matrix>(matrix);
 
     std::cout << MetaNN::IsMatrix<decltype(matrix)> << std::endl;
-    /// auto sigmoid = MetaNN::Sigmoid(matrix);
-    auto ret = ResType(matrix);
+    auto sigmoid = MetaNN::Sigmoid(matrix);
 
     std::cout << "ok" << std::endl;
     return 0;
