@@ -27,9 +27,6 @@ using Sigmoid = MetaNN::UnaryOpTags::Sigmoid;
 using OperCate = MetaNN::OperCateCal<ADD, MetaNN::Matrix<int, CPU>,
                                      MetaNN::TrivialMatrix<int, CPU>>;
 
-using ResType =
-    MetaNN::UnaryOp<MetaNN::UnaryOpTags::Sigmoid, MetaNN::Matrix<int, CPU>>;
-
 int main() {
     MetaNN::ContinuousMemory<int, CPU> memory(10);
     MetaNN::Matrix<int, CPU> matrix(3, 3);
@@ -68,6 +65,7 @@ int main() {
 
     std::cout << MetaNN::IsMatrix<decltype(matrix)> << std::endl;
     auto sigmoid = MetaNN::Sigmoid(matrix);
+    auto sigmoid2 = MetaNN::Sigmoid(batch_matrix1);
 
     std::cout << "ok" << std::endl;
     return 0;
