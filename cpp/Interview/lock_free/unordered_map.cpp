@@ -2,7 +2,19 @@
 #include <iostream>
 #include <vector>
 
-template <typename Key, typename Value> class unordered_map {
+struct VectorHash {
+    template <typename T>
+    std::size_t operator()(const std::vector<T>& vec) const {
+        std::size_t seed = vec.size();
+        for (const auto& i : vec) {
+            seed ^= std::hash<T>{}(i) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        }
+        return seed;
+    }
+};
+
+template <typename Key, typename Value, typename Hash = std::hash<Key>>
+class unordered_map {
   public:
     explicit unordered_map(size_t num_buckets) : buckets(num_buckets) {}
 
@@ -55,9 +67,7 @@ template <typename Key, typename Value> class unordered_map {
 
     std::vector<std::atomic<Node*>> buckets;
 
-    size_t hash(const Key& key) {
-        return std::hash<Key>{}(key) % buckets.size();
-    }
+    size_t hash(const Key& key) { return Hash{}(key) % buckets.size(); }
 };
 
 int main() {
@@ -69,6 +79,16 @@ int main() {
 
     std::string value;
     if (map.find(2, value)) {
+        std::cout << "Value found: " << value << std::endl;
+    } else {
+        std::cout << "Value not found" << std::endl;
+    }
+
+    unordered_map<std::vector<int>, std::string, VectorHash> map2(10);
+    map2.insert({1, 2, 3}, "One");
+    map2.insert({4, 5, 6}, "Two");
+
+    if (map2.find({1, 2, 3}, value)) {
         std::cout << "Value found: " << value << std::endl;
     } else {
         std::cout << "Value not found" << std::endl;

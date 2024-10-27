@@ -3,30 +3,35 @@
 using namespace std;
 
 class Solution {
-    static int* divisor;
-
   public:
-    int minOperations(vector<int>& nums) {
-        int n = nums.size();
-        if (divisor == nullptr) {
-            divisor = new int[1000001];
-            for (int i = 1; i <= 1000000; ++i) {
-                for (int j = i + i; j <= 1000000; j += i) {
-                    divisor[j] = max(divisor[j], i);
+    long long maxScore(vector<int>& nums) {
+        if (nums.size() == 1)
+            return 1LL * nums[0] * nums[0];
+        long long ans = 0;
+        for (int skip = -1; skip < (int)nums.size(); skip++) {
+            long long _gcd = 0, lcm = 0;
+            // cout << "skip: " << skip << endl;
+            for (int i = 0; i < nums.size(); i++) {
+                if (i == skip)
+                    continue;
+                if (!_gcd) {
+                    _gcd = nums[i];
+                    lcm = nums[i];
+                } else {
+                    _gcd = gcd(_gcd, nums[i]);
+                    lcm = lcm * nums[i] / gcd(lcm, nums[i]);
                 }
             }
-        }
-
-        int ans = 0;
-        for (int i = n - 2; i >= 0; --i) {
-            while (nums[i] > nums[i + 1]) {
-                if (divisor[nums[i]] == 1)
-                    return -1;
-                nums[i] /= divisor[nums[i]];
-                ans++;
-            }
+            // cout << _gcd << " " << lcm << endl;
+            ans = max(ans, _gcd * lcm);
         }
         return ans;
     }
 };
-int* Solution::divisor = nullptr;
+
+int main() {
+    Solution sln;
+    vector<int> nums = {2, 4, 8, 16};
+    cout << sln.maxScore(nums) << endl;
+    return 0;
+}
