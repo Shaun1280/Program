@@ -25,6 +25,23 @@ template <> class OperOrganizer<UnaryOpTags::Transpose, CategoryTags::Matrix> {
     size_t m_colNum;
 };
 
+template <>
+class OperOrganizer<UnaryOpTags::Transpose, CategoryTags::BatchMatrix>
+    : public OperOrganizer<UnaryOpTags::Transpose, CategoryTags::Matrix> {
+    using BaseType =
+        OperOrganizer<UnaryOpTags::Transpose, CategoryTags::Matrix>;
+
+  public:
+    template <typename TData>
+    OperOrganizer(const TData& data)
+        : BaseType(data), m_batchNum(data.BatchNum()) {}
+
+    [[nodiscard]] size_t BatchNum() const noexcept { return m_batchNum; }
+
+  private:
+    size_t m_batchNum;
+};
+
 } // namespace MetaNN
 
 #endif
