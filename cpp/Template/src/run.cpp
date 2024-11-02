@@ -13,6 +13,7 @@
 #include <MetaNN/data/matrices/trivial_matrix.h>
 #include <MetaNN/data/matrices/zero_matrix.h>
 #include <MetaNN/operators/add.h>
+#include <MetaNN/operators/collapse.h>
 #include <MetaNN/operators/facilities/category_cal.h>
 #include <MetaNN/operators/facilities/organizer.h>
 #include <MetaNN/operators/facilities/tags.h>
@@ -76,6 +77,9 @@ int main() {
               << std::endl;
 
     auto transpose = MetaNN::Transpose(matrix);
+
+    auto collapse = MetaNN::Collapse(batch_matrix1);
+    std::cout << collapse.RowNum() << " " << collapse.ColNum() << std::endl;
 
     std::cout << "ok" << std::endl;
     return 0;
