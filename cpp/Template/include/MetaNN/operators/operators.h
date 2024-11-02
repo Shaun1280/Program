@@ -47,7 +47,50 @@ class UnaryOp : public OperOrganizer<TOpTag, OperCateCal<TOpTag, TData>> {
     TData m_data;
 };
 
-template <typename TOpTag, typename TData1, typename TData2> class BinaryOp;
+template <typename TOpTag, typename TData1, typename TData2>
+class BinaryOp
+    : public OperOrganizer<TOpTag, OperCateCal<TOpTag, TData1, TData2>> {
+    static_assert(std::is_same_v<RemoveCVRef<TData1>, TData1>,
+                  "TData1 is not available type");
+    static_assert(std::is_same_v<RemoveCVRef<TData2>, TData2>,
+                  "TData2 is not available type");
+    using Cate = OperCateCal<TOpTag, TData1, TData2>;
+
+  public:
+    using ElementTpype =
+        typename OperElementType_<TOpTag, TData1, TData2>::type;
+    using DeviceType = typename OperDeviceType_<TOpTag, TData1, TData2>::type;
+
+  public:
+    BinaryOp(TData1 data1, TData2 data2)
+        : OperOrganizer<TOpTag, Cate>(data1, data2), m_data1(std::move(data1)),
+          m_data2(std::move(data2)) {}
+
+    [[nodiscard]] bool operator==(const BinaryOp& val) const {
+        return (m_data1 == val.m_data1) && (m_data2 == val.m_data2);
+    }
+
+    template <typename TOtherData>
+    [[nodiscard]] bool operator==(const TOtherData& val) const {
+        return false;
+    }
+
+    template <typename TOtherData>
+    [[nodiscard]] bool operator!=(const TOtherData& val) const {
+        return !(operator==(val));
+    }
+
+    [[nodiscard]] const TData1& Operand1() const { return m_data1; }
+
+    [[nodiscard]] const TData2& Operand2() const { return m_data2; }
+
+  private:
+    TData1 m_data1;
+    TData2 m_data2;
+
+    // using TPrincipal = PrincipalDataType<Cate, ElementType, DeviceType>;
+    // EvalBuffer<TPrincipal> m_evalBuf;
+};
 
 template <typename TOpTag, typename TData1, typename TData2, typename TData3>
 class TernaryOp;

@@ -57,7 +57,7 @@ struct OperCategory_ {
     using type = THeadCate;
 };
 
-// For operation result category calculation
+// For getting category of operation result 
 template <typename TOpTag, typename THead, typename... TRemain>
 using OperCateCal = typename NSOperCateCal::CateInduce_<
     TOpTag, NSOperCateCal::Data2Cate<THead, TRemain...>>::type;
