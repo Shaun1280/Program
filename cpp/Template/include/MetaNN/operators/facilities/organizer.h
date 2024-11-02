@@ -6,6 +6,7 @@
 
 namespace MetaNN {
 
+// OperOrganizer provides dim interfaces
 template <typename TOpTag, typename TCate> class OperOrganizer;
 
 template <typename TOpTag> class OperOrganizer<TOpTag, CategoryTags::Scalar> {

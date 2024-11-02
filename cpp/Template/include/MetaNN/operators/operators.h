@@ -12,7 +12,7 @@
 
 namespace MetaNN {
 
-// TOpTag: Operation Tag; OperOrganizer provides dim interfaces
+// TOpTag: Operation Tag; TData: Operand Data (e.g. Matrix<int, CPU>(3, 3))
 template <typename TOpTag, typename TData>
 class UnaryOp : public OperOrganizer<TOpTag, OperCateCal<TOpTag, TData>> {
     static_assert(std::is_same_v<RemoveCVRef<TData>, TData>,
@@ -27,21 +27,21 @@ class UnaryOp : public OperOrganizer<TOpTag, OperCateCal<TOpTag, TData>> {
     UnaryOp(TData p_data)
         : OperOrganizer<TOpTag, Cate>(p_data), m_data(std::move(p_data)) {}
 
-    [[nodiscard]] bool operator==(const UnaryOp& val) const {
+    [[nodiscard]] bool operator==(const UnaryOp& val) const noexcept {
         return m_data == val.data;
     }
 
     template <typename TOtherData>
-    [[nodiscard]] bool operator==(const TOtherData& val) const {
+    [[nodiscard]] bool operator==(const TOtherData& val) const noexcept {
         return false;
     }
 
     template <typename TOtherData>
-    [[nodiscard]] bool operator!=(const TOtherData& val) const {
+    [[nodiscard]] bool operator!=(const TOtherData& val) const noexcept {
         return !(operator==(val));
     }
 
-    [[nodiscard]] const TData& Operand() const { return m_data; }
+    [[nodiscard]] const TData& Operand() const noexcept { return m_data; }
 
   private:
     TData m_data;
@@ -66,23 +66,23 @@ class BinaryOp
         : OperOrganizer<TOpTag, Cate>(data1, data2), m_data1(std::move(data1)),
           m_data2(std::move(data2)) {}
 
-    [[nodiscard]] bool operator==(const BinaryOp& val) const {
+    [[nodiscard]] bool operator==(const BinaryOp& val) const noexcept {
         return (m_data1 == val.m_data1) && (m_data2 == val.m_data2);
     }
 
     template <typename TOtherData>
-    [[nodiscard]] bool operator==(const TOtherData& val) const {
+    [[nodiscard]] bool operator==(const TOtherData& val) const noexcept {
         return false;
     }
 
     template <typename TOtherData>
-    [[nodiscard]] bool operator!=(const TOtherData& val) const {
+    [[nodiscard]] bool operator!=(const TOtherData& val) const noexcept {
         return !(operator==(val));
     }
 
-    [[nodiscard]] const TData1& Operand1() const { return m_data1; }
+    [[nodiscard]] const TData1& Operand1() const noexcept { return m_data1; }
 
-    [[nodiscard]] const TData2& Operand2() const { return m_data2; }
+    [[nodiscard]] const TData2& Operand2() const noexcept { return m_data2; }
 
   private:
     TData1 m_data1;
