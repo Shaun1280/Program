@@ -12,6 +12,7 @@
 #include <MetaNN/data/matrices/one_hot_vector.h>
 #include <MetaNN/data/matrices/trivial_matrix.h>
 #include <MetaNN/data/matrices/zero_matrix.h>
+#include <MetaNN/operators/add.h>
 #include <MetaNN/operators/facilities/category_cal.h>
 #include <MetaNN/operators/facilities/organizer.h>
 #include <MetaNN/operators/facilities/tags.h>
@@ -66,6 +67,12 @@ int main() {
     std::cout << MetaNN::IsMatrix<decltype(matrix)> << std::endl;
     auto sigmoid = MetaNN::Sigmoid(matrix);
     auto sigmoid2 = MetaNN::Sigmoid(batch_matrix1);
+
+    auto add = matrix + matrix;
+    auto add2 = matrix + MakeDuplicate(10, matrix);
+    std::cout << add.RowNum() << " " << add.ColNum() << std::endl;
+    std::cout << add2.BatchNum() << " " << add2.RowNum() << " " << add2.ColNum()
+              << std::endl;
 
     std::cout << "ok" << std::endl;
     return 0;
