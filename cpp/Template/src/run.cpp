@@ -12,6 +12,7 @@
 #include <MetaNN/data/matrices/one_hot_vector.h>
 #include <MetaNN/data/matrices/trivial_matrix.h>
 #include <MetaNN/data/matrices/zero_matrix.h>
+#include <MetaNN/operators/abs.h>
 #include <MetaNN/operators/add.h>
 #include <MetaNN/operators/collapse.h>
 #include <MetaNN/operators/facilities/category_cal.h>
@@ -80,6 +81,9 @@ int main() {
 
     auto collapse = MetaNN::Collapse(batch_matrix1);
     std::cout << collapse.RowNum() << " " << collapse.ColNum() << std::endl;
+
+    auto abs = MetaNN::Abs(matrix);
+    std::cout << abs.RowNum() << " " << abs.ColNum() << std::endl;
 
     std::cout << "ok" << std::endl;
     return 0;
