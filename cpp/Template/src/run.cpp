@@ -19,6 +19,7 @@
 #include <MetaNN/operators/facilities/traits.h>
 #include <MetaNN/operators/operators.h>
 #include <MetaNN/operators/sigmoid.h>
+#include <MetaNN/operators/transpose.h>
 
 using CPU = MetaNN::DeviceTags::CPU;
 using CategoryTags = MetaNN::CategoryTags;
@@ -73,6 +74,8 @@ int main() {
     std::cout << add.RowNum() << " " << add.ColNum() << std::endl;
     std::cout << add2.BatchNum() << " " << add2.RowNum() << " " << add2.ColNum()
               << std::endl;
+
+    auto transpose = MetaNN::Transpose(matrix);
 
     std::cout << "ok" << std::endl;
     return 0;

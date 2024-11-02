@@ -42,6 +42,26 @@ class OperOrganizer<UnaryOpTags::Transpose, CategoryTags::BatchMatrix>
     size_t m_batchNum;
 };
 
+template <typename TP> struct OperTranspose_ {
+    // valid check
+  private:
+    using rawM = RemoveCVRef<TP>;
+
+  public:
+    static constexpr bool valid = IsMatrix<rawM> || IsBatchMatrix<rawM>;
+
+  public:
+    static auto Eval(TP&& p_m) {
+        using ResType = UnaryOp<UnaryOpTags::Transpose, rawM>;
+        return ResType(std::forward<TP>(p_m));
+    }
+};
+
+template <typename TP, std::enable_if_t<OperTranspose_<TP>::valid, bool> = true>
+auto Transpose(TP&& p_m) {
+    return OperTranspose_<TP>::Eval(std::forward<TP>(p_m));
+}
+
 } // namespace MetaNN
 
 #endif
