@@ -21,6 +21,7 @@
 #include <MetaNN/operators/facilities/traits.h>
 #include <MetaNN/operators/operators.h>
 #include <MetaNN/operators/sigmoid.h>
+#include <MetaNN/operators/sign.h>
 #include <MetaNN/operators/transpose.h>
 
 using CPU = MetaNN::DeviceTags::CPU;
@@ -84,6 +85,9 @@ int main() {
 
     auto abs = MetaNN::Abs(matrix);
     std::cout << abs.RowNum() << " " << abs.ColNum() << std::endl;
+
+    auto sign = MetaNN::Sign(matrix);
+    std::cout << sign.RowNum() << " " << sign.ColNum() << std::endl;
 
     std::cout << "ok" << std::endl;
     return 0;
