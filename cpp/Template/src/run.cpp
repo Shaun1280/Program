@@ -22,6 +22,8 @@
 #include <MetaNN/operators/operators.h>
 #include <MetaNN/operators/sigmoid.h>
 #include <MetaNN/operators/sign.h>
+#include <MetaNN/operators/softmax.h>
+#include <MetaNN/operators/tanh.h>
 #include <MetaNN/operators/transpose.h>
 
 using CPU = MetaNN::DeviceTags::CPU;
@@ -84,10 +86,17 @@ int main() {
     std::cout << collapse.RowNum() << " " << collapse.ColNum() << std::endl;
 
     auto abs = MetaNN::Abs(matrix);
-    std::cout << abs.RowNum() << " " << abs.ColNum() << std::endl;
+    std::cout << "abs: " << abs.RowNum() << " " << abs.ColNum() << std::endl;
 
     auto sign = MetaNN::Sign(matrix);
-    std::cout << sign.RowNum() << " " << sign.ColNum() << std::endl;
+    std::cout << "sign: " << sign.RowNum() << " " << sign.ColNum() << std::endl;
+
+    auto tanh = MetaNN::Tanh(matrix);
+    std::cout << "tanh: " << tanh.RowNum() << " " << tanh.ColNum() << std::endl;
+
+    auto softmax = MetaNN::VecSoftmax(matrix);
+    std::cout << "softmax: " << softmax.RowNum() << " " << softmax.ColNum()
+              << std::endl;
 
     std::cout << "ok" << std::endl;
     return 0;
