@@ -15,6 +15,7 @@
 #include <MetaNN/operators/abs.h>
 #include <MetaNN/operators/add.h>
 #include <MetaNN/operators/collapse.h>
+#include <MetaNN/operators/dot.h>
 #include <MetaNN/operators/facilities/category_cal.h>
 #include <MetaNN/operators/facilities/organizer.h>
 #include <MetaNN/operators/facilities/tags.h>
@@ -97,6 +98,12 @@ int main() {
     auto softmax = MetaNN::VecSoftmax(matrix);
     std::cout << "softmax: " << softmax.RowNum() << " " << softmax.ColNum()
               << std::endl;
+
+    auto dot = Dot(matrix, matrix);
+    auto dot2 = Dot(matrix, MakeDuplicate(10, matrix));
+    std::cout << "dot: " << dot.RowNum() << " " << dot.ColNum() << std::endl;
+    std::cout << "dot2: " << dot2.BatchNum() << " " << dot2.RowNum() << " "
+              << dot2.ColNum() << std::endl;
 
     std::cout << "ok" << std::endl;
     return 0;
