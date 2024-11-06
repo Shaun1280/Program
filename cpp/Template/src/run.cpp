@@ -16,6 +16,7 @@
 #include <MetaNN/operators/add.h>
 #include <MetaNN/operators/collapse.h>
 #include <MetaNN/operators/dot.h>
+#include <MetaNN/operators/element_mul.h>
 #include <MetaNN/operators/facilities/category_cal.h>
 #include <MetaNN/operators/facilities/organizer.h>
 #include <MetaNN/operators/facilities/tags.h>
@@ -104,6 +105,14 @@ int main() {
     std::cout << "dot: " << dot.RowNum() << " " << dot.ColNum() << std::endl;
     std::cout << "dot2: " << dot2.BatchNum() << " " << dot2.RowNum() << " "
               << dot2.ColNum() << std::endl;
+
+    auto element_mul = matrix * matrix;
+    auto element_mul2 = matrix * MakeDuplicate(10, matrix);
+    std::cout << "element_mul: " << element_mul.RowNum() << " "
+              << element_mul.ColNum() << std::endl;
+    std::cout << "element_mul2: " << element_mul2.BatchNum() << " "
+              << element_mul2.RowNum() << " " << element_mul2.ColNum()
+              << std::endl;
 
     std::cout << "ok" << std::endl;
     return 0;
