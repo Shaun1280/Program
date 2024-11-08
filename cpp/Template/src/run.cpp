@@ -15,12 +15,14 @@
 #include <MetaNN/operators/abs.h>
 #include <MetaNN/operators/add.h>
 #include <MetaNN/operators/collapse.h>
+#include <MetaNN/operators/divide.h>
 #include <MetaNN/operators/dot.h>
 #include <MetaNN/operators/element_mul.h>
 #include <MetaNN/operators/facilities/category_cal.h>
 #include <MetaNN/operators/facilities/organizer.h>
 #include <MetaNN/operators/facilities/tags.h>
 #include <MetaNN/operators/facilities/traits.h>
+#include <MetaNN/operators/negative_log_likelihood.h>
 #include <MetaNN/operators/operators.h>
 #include <MetaNN/operators/sigmoid.h>
 #include <MetaNN/operators/sign.h>
@@ -112,6 +114,17 @@ int main() {
               << element_mul.ColNum() << std::endl;
     std::cout << "element_mul2: " << element_mul2.BatchNum() << " "
               << element_mul2.RowNum() << " " << element_mul2.ColNum()
+              << std::endl;
+
+    auto divide = matrix / matrix;
+    auto divide2 = matrix / MakeDuplicate(10, matrix);
+    std::cout << "divide: " << divide.RowNum() << " " << divide.ColNum()
+              << std::endl;
+    std::cout << "divide2: " << divide2.BatchNum() << " " << divide2.RowNum()
+              << " " << divide2.ColNum() << std::endl;
+
+    auto nll = MetaNN::NegativeLogLikelihood(matrix, matrix);
+    std::cout << "nll: " << divide.RowNum() << " " << divide.ColNum()
               << std::endl;
 
     std::cout << "ok" << std::endl;
