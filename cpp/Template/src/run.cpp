@@ -29,6 +29,7 @@
 #include <MetaNN/operators/sign.h>
 #include <MetaNN/operators/softmax.h>
 #include <MetaNN/operators/softmax_derivative.h>
+#include <MetaNN/operators/substract.h>
 #include <MetaNN/operators/tanh.h>
 #include <MetaNN/operators/transpose.h>
 
@@ -136,6 +137,13 @@ int main() {
     auto sigmoid_derivative = MetaNN::SigmoidDerivative(matrix, matrix);
     std::cout << "sigmoid derivative: " << sigmoid_derivative.RowNum() << " "
               << sigmoid_derivative.ColNum() << std::endl;
+
+    auto substract = matrix - matrix;
+    auto substract2 = matrix - MakeDuplicate(10, matrix);
+    std::cout << "substract: " << substract.RowNum() << " "
+              << substract.ColNum() << std::endl;
+    std::cout << "substract2: " << substract2.BatchNum() << " "
+              << substract2.RowNum() << " " << substract2.ColNum() << std::endl;
 
     std::cout << "ok" << std::endl;
     return 0;
