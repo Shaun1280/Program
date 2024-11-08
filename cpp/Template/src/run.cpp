@@ -27,6 +27,7 @@
 #include <MetaNN/operators/sigmoid.h>
 #include <MetaNN/operators/sign.h>
 #include <MetaNN/operators/softmax.h>
+#include <MetaNN/operators/softmax_derivative.h>
 #include <MetaNN/operators/tanh.h>
 #include <MetaNN/operators/transpose.h>
 
@@ -126,6 +127,10 @@ int main() {
     auto nll = MetaNN::NegativeLogLikelihood(matrix, matrix);
     std::cout << "nll: " << divide.RowNum() << " " << divide.ColNum()
               << std::endl;
+
+    auto softmax_derivative = MetaNN::VecSoftmaxDerivative(matrix, matrix);
+    std::cout << "softmax_derivative: " << softmax_derivative.RowNum() << " "
+              << softmax_derivative.ColNum() << std::endl;
 
     std::cout << "ok" << std::endl;
     return 0;
