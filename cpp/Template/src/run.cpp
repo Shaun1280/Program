@@ -22,6 +22,7 @@
 #include <MetaNN/operators/facilities/organizer.h>
 #include <MetaNN/operators/facilities/tags.h>
 #include <MetaNN/operators/facilities/traits.h>
+#include <MetaNN/operators/interpolate.h>
 #include <MetaNN/operators/negative_log_likelihood.h>
 #include <MetaNN/operators/negative_log_likelihood_derivative.h>
 #include <MetaNN/operators/operators.h>
@@ -155,6 +156,10 @@ int main() {
     auto tanh_derivative = MetaNN::TanhDerivative(matrix, matrix);
     std::cout << "tanh derivative: " << tanh_derivative.RowNum() << " "
               << tanh_derivative.ColNum() << std::endl;
+
+    auto interpolate = MetaNN::Interpolate(matrix, matrix, matrix);
+    std::cout << "interpolate: " << interpolate.RowNum() << " "
+              << interpolate.ColNum() << std::endl;
 
     std::cout << "ok" << std::endl;
     return 0;
