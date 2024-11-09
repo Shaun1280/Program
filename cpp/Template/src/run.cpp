@@ -31,6 +31,7 @@
 #include <MetaNN/operators/softmax_derivative.h>
 #include <MetaNN/operators/substract.h>
 #include <MetaNN/operators/tanh.h>
+#include <MetaNN/operators/tanh_derivative.h>
 #include <MetaNN/operators/transpose.h>
 
 using CPU = MetaNN::DeviceTags::CPU;
@@ -144,6 +145,10 @@ int main() {
               << substract.ColNum() << std::endl;
     std::cout << "substract2: " << substract2.BatchNum() << " "
               << substract2.RowNum() << " " << substract2.ColNum() << std::endl;
+
+    auto tanh_derivative = MetaNN::TanhDerivative(matrix, matrix);
+    std::cout << "tanh derivative: " << tanh_derivative.RowNum() << " "
+              << tanh_derivative.ColNum() << std::endl;
 
     std::cout << "ok" << std::endl;
     return 0;
