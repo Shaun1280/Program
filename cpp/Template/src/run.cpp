@@ -23,6 +23,7 @@
 #include <MetaNN/operators/facilities/tags.h>
 #include <MetaNN/operators/facilities/traits.h>
 #include <MetaNN/operators/negative_log_likelihood.h>
+#include <MetaNN/operators/negative_log_likelihood_derivative.h>
 #include <MetaNN/operators/operators.h>
 #include <MetaNN/operators/sigmoid.h>
 #include <MetaNN/operators/sigmoid_derivative.h>
@@ -130,6 +131,11 @@ int main() {
     auto nll = MetaNN::NegativeLogLikelihood(matrix, matrix);
     std::cout << "nll: " << divide.RowNum() << " " << divide.ColNum()
               << std::endl;
+
+    auto nll_derivative =
+        MetaNN::NegativeLogLikelihoodDerivative(scalar, matrix, matrix);
+    std::cout << "nll_derivative: " << nll_derivative.RowNum() << " "
+              << nll_derivative.ColNum() << std::endl;
 
     auto softmax_derivative = MetaNN::VecSoftmaxDerivative(matrix, matrix);
     std::cout << "softmax_derivative: " << softmax_derivative.RowNum() << " "

@@ -94,8 +94,8 @@ class BinaryOp
 
 template <typename TOpTag, typename TData1, typename TData2, typename TData3>
 class TernaryOp
-    : public OperOrganizer_<TOpTag,
-                            OperCateCal<TOpTag, TData1, TData2, TData3>> {
+    : public OperOrganizer<TOpTag,
+                           OperCateCal<TOpTag, TData1, TData2, TData3>> {
     static_assert(std::is_same_v<RemoveCVRef<TData1>, TData1>,
                   "TData1 is not an available type");
     static_assert(std::is_same_v<RemoveCVRef<TData2>, TData2>,
@@ -112,7 +112,7 @@ class TernaryOp
 
   public:
     TernaryOp(TData1 data1, TData2 data2, TData3 data3)
-        : OperOrganizer_<TOpTag, Cate>(data1, data2, data3),
+        : OperOrganizer<TOpTag, Cate>(data1, data2, data3),
           m_data1(std::move(data1)), m_data2(std::move(data2)),
           m_data3(std::move(data3)) {}
 
@@ -141,7 +141,7 @@ class TernaryOp
     TData1 m_data1;
     TData2 m_data2;
     TData3 m_data3;
-}
+};
 
 template <typename TOpTag, typename TData>
 static constexpr bool IsMatrix<UnaryOp<TOpTag, TData>> =
