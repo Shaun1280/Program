@@ -1,195 +1,127 @@
 #include <iostream>
-#include <stdexcept>
+#include <memory>  // For std::allocator
+#include <utility> // For std::move and std::forward
 
-// Implementation of a double-ended queue using a dynamic array of blocks
-template <typename T> class deque {
-  private:
-    // Size of each block in the deque
-    static constexpr size_t BLOCK_SIZE = 8;
-    // Initial size of the map (array of block pointers)
-    static constexpr size_t INITIAL_MAP_SIZE = 8;
+template <typename T> class Vector2 {
+  public:
+    using value_type = T;
+    using size_type = std::size_t;
+    using difference_type = std::ptrdiff_t;
+    using reference = value_type&;
+    using const_reference = const value_type&;
+    using pointer = value_type*;
+    using const_pointer = const value_type*;
 
-    T** m_map;             // Array of pointers to blocks
-    size_t m_map_size;     // Current size of the map
-    size_t m_start_block;  // Index of first block containing elements
-    size_t m_start_pos;    // Position in first block where elements start
-    size_t m_finish_block; // Index of last block containing elements
-    size_t m_finish_pos;   // Position in last block where elements end
-    size_t m_size;         // Total number of elements in deque
-
-    // Allocate a new block of memory
-    T* allocate_block() { return new T[BLOCK_SIZE]; }
-
-    // Deallocate a block of memory
-    void deallocate_block(T* block) { delete[] block; }
-
-    // Reallocate the map with a new size when more space is needed
-    void reallocate_map(size_t new_map_size) {
-        // Allocate new map
-        T** new_map = new T*[new_map_size];
-        // Calculate number of blocks needed
-        size_t num_blocks = (m_size + BLOCK_SIZE - 1) / BLOCK_SIZE;
-        // Calculate new starting position to center the blocks
-        size_t new_start = (new_map_size - num_blocks) >> 1;
-
-        // Copy existing blocks to new map
-        for (size_t i = m_start_block; i <= m_finish_block; ++i) {
-            new_map[new_start + (i - m_start_block)] = m_map[i];
+    struct Iterator {
+        pointer ptr;
+        Iterator(pointer ptr) : ptr(ptr) {}
+        Iterator& operator++() {
+            ++ptr;
+            return *this;
         }
+        Iterator operator++(int) {
+            Iterator temp = *this;
+            ++ptr;
+            return temp;
+        }
+        reference operator*() { return *ptr; }
+    };
 
-        delete[] m_map;
-
-        // Update member variables
-        m_map = new_map;
-        m_finish_block = new_start + (m_finish_block - m_start_block);
-        m_start_block = new_start;
-        m_map_size = new_map_size;
-    }
+    using iterator = Iterator;
+    using const_iterator = const Iterator;
 
   public:
-    // Constructor - initializes empty deque with one block
-    deque()
-        : m_map(nullptr), m_map_size(0), m_start_block(0), m_start_pos(0),
-          m_finish_block(0), m_finish_pos(0), m_size(0) {
-        m_map = new T*[INITIAL_MAP_SIZE];
-        m_map_size = INITIAL_MAP_SIZE;
-        m_start_block = m_finish_block = m_map_size >> 1;
-        m_map[m_start_block] = allocate_block();
+    // Default constructor
+    Vector2() : m_data(nullptr), m_size(0), m_capacity(0) {}
+
+    // Destructor
+    ~Vector2() {
+        clear();
+        deallocate();
     }
 
-    // Destructor - deallocates all blocks and map
-    ~deque() {
-        for (size_t i = m_start_block; i <= m_finish_block; ++i) {
-            deallocate_block(m_map[i]);
-        }
-        delete[] m_map;
-    }
+    // Size and capacity
+    size_type size() const noexcept { return m_size; }
+    size_type capacity() const noexcept { return m_capacity; }
+    bool empty() const noexcept { return m_size == 0; }
 
-    // Returns number of elements in deque
-    size_t size() const { return m_size; }
-    // Returns true if deque is empty
-    bool empty() const { return m_size == 0; }
+    // Access elements
+    reference operator[](size_type index) { return m_data[index]; }
+    const_reference operator[](size_type index) const { return m_data[index]; }
 
-    // Add element to front of deque
-    void push_front(const T& value) {
-        if (m_start_pos == 0) {
-            // Need new block for front
-            if (m_start_block == 0) {
-                // Need to reallocate map
-                reallocate_map(m_map_size ? m_map_size * 2 : 1);
-            }
-            m_map[--m_start_block] = allocate_block();
-            m_start_pos = BLOCK_SIZE;
-        }
-        m_map[m_start_block][--m_start_pos] = value;
-        ++m_size;
-    }
+    // Front and back
+    reference front() { return m_data[0]; }
+    const_reference front() const { return m_data[0]; }
 
-    // Add element to back of deque
+    reference back() { return m_data[m_size - 1]; }
+    const_reference back() const { return m_data[m_size - 1]; }
+
+    // Iterators
+    iterator begin() noexcept { return m_data; }
+    const_iterator begin() const noexcept { return m_data; }
+    iterator end() noexcept { return m_data + m_size; }
+    const_iterator end() const noexcept { return m_data + m_size; }
+
+    // Push back
     void push_back(const T& value) {
-        if (m_finish_pos == BLOCK_SIZE) {
-            // Need new block for back
-            if (m_finish_block + 1 == m_map_size) {
-                // Need to reallocate map
-                reallocate_map(m_map_size ? m_map_size * 2 : 1);
-            }
-            m_map[++m_finish_block] = allocate_block();
-            m_finish_pos = 0;
+        if (m_size >= m_capacity) {
+            reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
         }
-        m_map[m_finish_block][m_finish_pos++] = value;
+        new (m_data + m_size) T(value);
         ++m_size;
     }
 
-    // Remove element from front of deque
-    void pop_front() {
-        if (empty()) {
-            throw std::out_of_range("deque is empty");
+    void push_back(T&& value) {
+        if (m_size >= m_capacity) {
+            reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
         }
-        ++m_start_pos;
-        --m_size;
-        if (m_start_pos == BLOCK_SIZE) {
-            // Current block is empty, move to next
-            deallocate_block(m_map[m_start_block]);
-            ++m_start_block;
-            m_start_pos = 0;
-        }
+        new (m_data + m_size) T(std::move(value));
+        ++m_size;
     }
 
-    // Remove element from back of deque
+    // Emplace back
+    template <typename... Args> void emplace_back(Args&&... args) {
+        if (m_size >= m_capacity) {
+            reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
+        }
+        new (m_data + m_size) T(std::forward<Args>(args)...);
+        ++m_size;
+    }
+
+    // Pop back
     void pop_back() {
-        if (empty()) {
-            throw std::out_of_range("deque is empty");
+        if (m_size == 0) {
+            throw std::out_of_range("Vector2<>::pop_back(): empty vector");
         }
-        if (m_finish_pos == 0) {
-            // Current block is empty, move to previous
-            deallocate_block(m_map[m_finish_block]);
-            --m_finish_block;
-            m_finish_pos = BLOCK_SIZE;
-        }
-        --m_finish_pos;
-        --m_size;
+        m_data[--m_size].~T();
     }
 
-    // Access element at given index
-    T& operator[](size_t n) {
-        size_t block = m_start_block + (m_start_pos + n) / BLOCK_SIZE;
-        size_t pos = (m_start_pos + n) % BLOCK_SIZE;
-        return m_map[block][pos];
-    }
-
-    // Access const element at given index
-    const T& operator[](size_t n) const {
-        size_t block = m_start_block + (m_start_pos + n) / BLOCK_SIZE;
-        size_t pos = (m_start_pos + n) % BLOCK_SIZE;
-        return m_map[block][pos];
-    }
-
-    // Output stream operator for printing deque contents
-    friend std::ostream& operator<<(std::ostream& os, const deque<T>& q) {
-        for (size_t i = 0; i < q.size(); ++i) {
-            os << q[i] << " ";
+    // Clear
+    void clear() {
+        for (size_type i = 0; i < m_size; ++i) {
+            m_data[i].~T();
         }
-        return os;
+        m_size = 0;
+    }
+
+  protected:
+    size_type m_size;
+    size_type m_capacity;
+    pointer m_data;
+
+    void deallocate() {
+        if (m_data) {
+            delte[] m_data;
+            m_data = nullptr;
+        }
+    }
+
+    void reallocate(size_type new_capacity) {
+        pointer new_data = static_cast<pointer>(
+            ::operator new(new_capacity * sizeof(value_type)));
+        std::unitialized_move(m_data, m_data + m_size, new_data);
+        deallocate();
+        m_data = new_data;
+        m_capacity = new_capacity;
     }
 };
-
-// Main function demonstrating deque usage
-int main() {
-    deque<int> q;
-    // Push elements to back
-    for (int i = 0; i < 10; ++i) {
-        q.push_back(i);
-    }
-    std::cout << q << std::endl;
-
-    // Remove elements from front
-    for (int i = 0; i < 10; ++i) {
-        q.pop_front();
-    }
-
-    // Push elements to front
-    for (int i = 0; i < 10; ++i) {
-        q.push_front(i);
-    }
-    std::cout << q << std::endl;
-
-    // Remove elements from back
-    for (int i = 0; i < 10; ++i) {
-        q.pop_back();
-    }
-    std::cout << q << std::endl;
-
-    // Push elements to back again
-    for (int i = 0; i < 10; ++i) {
-        q.push_back(i);
-    }
-    std::cout << q << std::endl;
-
-    // Remove elements from back and print after each removal
-    for (int i = 0; i < 10; ++i) {
-        q.pop_back();
-        std::cout << q << std::endl;
-    }
-    std::cout << q << std::endl;
-    return 0;
-}
