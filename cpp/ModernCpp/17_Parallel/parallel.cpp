@@ -54,8 +54,30 @@ void par_merge() {
     std::vector<int> result(data.size() + data2.size());
     std::merge(std::execution::par, data.begin(), data.end(), data2.begin(),
                data2.end(), result.begin());
+    std::cout << "Merged result: ";
     std::for_each(std::execution::par, result.begin(), result.end(),
                   [](int value) { std::cout << value << " "; });
+    std::cout << std::endl;
+}
+
+void par_inner_product() {
+    std::vector<double> data = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    std::vector<double> data2 = {3, 1, 3, 4, 5, 6, 7, 8, 9};
+    auto result =
+        std::inner_product(data.begin(), data.end(), data2.begin(), 0.0);
+    std::cout << "Inner product: " << result << std::endl;
+}
+
+void par_running() {
+    std::vector<int> scores = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    std::vector<int> running_total(scores.size());
+    std::inclusive_scan(std::execution::par, scores.begin(), scores.end(),
+                        running_total.begin());
+    std::cout << "Running total: ";
+    std::for_each(std::execution::par, running_total.begin(),
+                  running_total.end(),
+                  [](int value) { std::cout << value << " "; });
+    std::cout << std::endl;
 }
 
 int main() {
@@ -71,5 +93,7 @@ int main() {
     par_discount();
     par_score();
     par_merge();
+    par_inner_product();
+    par_running();
     return 0;
 }
