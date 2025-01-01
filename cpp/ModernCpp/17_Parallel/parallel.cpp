@@ -14,13 +14,14 @@ void par_discount() {
 }
 
 void par_score() {
-    std::vector<int> scores = {1, 2, 3, 4, 5};
+    std::vector<int> scores = {1, 2, 93, 4, 5};
     std::sort(std::execution::par, scores.begin(), scores.end());
     std::for_each(std::execution::par, scores.begin(), scores.end(),
                   [](int score) { std::cout << score << " "; });
     std::cout << std::endl;
 
     auto pass_score = 60;
+    std::cout << "Sorted scores are: ";
     auto it =
         std::find_if(std::execution::par, scores.begin(), scores.end(),
                      [pass_score](int score) { return score >= pass_score; });
@@ -30,6 +31,31 @@ void par_score() {
     } else {
         std::cout << "No pass score" << std::endl;
     }
+
+    auto excellent_count =
+        std::count_if(std::execution::par, scores.begin(), scores.end(),
+                      [pass_score](int score) { return score >= pass_score; });
+
+    std::cout << excellent_count << " students are excellent" << std::endl;
+
+    std::replace_if(
+        std::execution::par, scores.begin(), scores.end(),
+        [pass_score](int score) { return score < pass_score; }, 0);
+
+    std::cout << "Scores after replacing: ";
+    std::for_each(std::execution::par, scores.begin(), scores.end(),
+                  [](int score) { std::cout << score << " "; });
+    std::cout << std::endl;
+}
+
+void par_merge() {
+    std::vector<int> data = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    std::vector<int> data2 = {3, 1, 3, 4, 5, 6, 7, 8, 9};
+    std::vector<int> result(data.size() + data2.size());
+    std::merge(std::execution::par, data.begin(), data.end(), data2.begin(),
+               data2.end(), result.begin());
+    std::for_each(std::execution::par, result.begin(), result.end(),
+                  [](int value) { std::cout << value << " "; });
 }
 
 int main() {
@@ -44,5 +70,6 @@ int main() {
 
     par_discount();
     par_score();
+    par_merge();
     return 0;
 }
