@@ -1,5 +1,8 @@
 #include <bits/stdc++.h>
 
+// Codeforces Round 1000 (Div. 2) D
+// https://codeforces.com/contest/2063/problem/D
+
 using namespace std;
 
 #define debug(x) cerr << #x << " = " << x << endl
@@ -84,19 +87,6 @@ void solveOne(int ncase) {
         return f[x] + g[y];
     };
 
-    /**
-     * 2 * x + y <= n
-     * x + 2 * y <= m
-     * x + y == k
-     * x >= 0
-     * y >= 0
-     * x <= n / 2
-     * y <= m / 2
-     * x + k <= n
-     * 2 * k - x <= m
-     * x >= 2 * k - m
-     */
-
     for (int k = 1; k <= k_max; ++k) {
         // x + y = k
         int l{max(0, 2 * k - m)}, r(min({n / 2, n - k, k}));
@@ -125,28 +115,3 @@ int main() {
         solveOne(i);
     return 0;
 }
-/* stuff you should look for
- * int overflow, array bounds
- * special cases (n = 1?)
- * do smth instead of nothing and stay organized
- * WRITE STUFF DOWN
- * DON'T GET STUCK ON ONE APPROACH
-
-5
-1 3
-0
-0 1 -1
-2 4
-0 100
--100 -50 0 50
-2 4
-0 1000
--100 -50 0 50
-6 6
-20 1 27 100 43 42
-100 84 1 24 22 77
-8 2
-564040265 -509489796 469913620 198872582 -400714529 553177666 131159391
--20796763 -1000000000 1000000000
-
- */
