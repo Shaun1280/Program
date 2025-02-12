@@ -1,5 +1,8 @@
 #include <bits/stdc++.h>
 
+// https://codeforces.com/contest/2063/problem/E
+// lca dist triangle property
+
 using namespace std;
 
 #define debug(x) cerr << #x << " = " << x << endl
@@ -49,57 +52,77 @@ template <typename T, typename... Args> inline void write(T& x, Args&... args) {
     write(x), putchar('\n'), write(args...);
 }
 
-constexpr int MAXN = 5e3 + 5, MOD = 998244353;
+constexpr int MAXN = 3e5 + 5, MOD = 1e9 + 7;
 
-array<int, MAXN> catlan;
-
-void init() {
-    catlan[0] = 1;
-    for (int i = 1; i < MAXN; ++i) {
-        for (int j = 0; j < i; ++j) {
-            catlan[i] =
-                (catlan[i] + 1LL * catlan[j] * catlan[i - j - 1] % MOD) % MOD;
-        }
-    }
-}
+vector<int> g[MAXN];
+array<int, MAXN> d, cntd, sufd, sz;
 
 void solveOne(int ncase) {
     int n;
     cin >> n;
-    string s(2 * n + 2, '.');
-    stack<int> stk;
-    s.front() = '(', s.back() = ')';
 
-    cout << catlan[n] << " ";
-    for (int i = 0, l, r; i < n; ++i) {
-        cin >> l >> r;
-        s[l] = '(', s[r] = ')';
+    for (int i = 0; i <= n + 1; ++i) {
+        g[i].clear();
+        d[i] = sz[i] = sufd[i] = cntd[i] = 0;
+    }
 
-        int ans{1};
-        for (const auto& c : s) {
-            if (c == ')') {
-                int cnt{0};
-                while (!stk.empty() && stk.top() != '(') {
-                    stk.pop();
-                    ++cnt;
-                }
-                ans = 1LL * ans * catlan[cnt / 2] % MOD;
-                stk.pop();
-            } else {
-                stk.push(c);
-            }
+    for (int i = 1, u, v; i < n; ++i) {
+        cin >> u >> v;
+        g[u].push_back(v);
+        g[v].push_back(u);
+    }
+
+    auto dfs1 = [&](auto dfs1, int cur, int fa = -1) -> void {
+        ++cntd[d[cur]], sz[cur] = 1;
+        for (const auto& to : g[cur]) {
+            if (to == fa)
+                continue;
+            d[to] = d[cur] + 1;
+            dfs1(dfs1, to, cur);
+            sz[cur] += sz[to];
+        }
+    };
+
+    dfs1(dfs1, 1);
+
+    for (int i = n; i >= 0; --i) {
+        sufd[i] = sufd[i + 1] + cntd[i];
+    }
+
+    long long ans{0};
+    for (int i = 1; i <= n; ++i) {
+        ans += 2LL * d[i] * (sufd[d[i] + 1] + cntd[d[i]] - sz[i]);
+        --cntd[d[i]];
+    }
+
+    auto dfs2 = [&](auto dfs2, int cur, int fa = -1) -> void {
+        long long sum{0};
+        for (const auto& to : g[cur]) {
+            if (to == fa)
+                continue;
+            sum += sz[to];
+            dfs2(dfs2, to, cur);
         }
 
-        cout << ans << " ";
-    }
-    cout << "\n";
+        long long tmp{0};
+        for (const auto& to : g[cur]) {
+            if (to == fa)
+                continue;
+            tmp += 1LL * sz[to] * (sum - sz[to]);
+        }
+
+        ans -= tmp / 2 * (2 * d[cur] + 1);
+    };
+
+    dfs2(dfs2, 1);
+
+    cout << ans << "\n";
 }
 
 int main() {
     boost;
     int testcase = 1;
     cin >> testcase;
-    init();
     for (int i = 1; i <= testcase; i++)
         solveOne(i);
     return 0;
@@ -110,22 +133,4 @@ int main() {
  * do smth instead of nothing and stay organized
  * WRITE STUFF DOWN
  * DON'T GET STUCK ON ONE APPROACH
-
-5
-1 3
-0
-0 1 -1
-2 4
-0 100
--100 -50 0 50
-2 4
-0 1000
--100 -50 0 50
-6 6
-20 1 27 100 43 42
-100 84 1 24 22 77
-8 2
-564040265 -509489796 469913620 198872582 -400714529 553177666 131159391
--20796763 -1000000000 1000000000
-
  */
