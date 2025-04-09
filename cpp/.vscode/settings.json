@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "concepts": "cpp",
+        "string_view": "cpp",
+        "ranges": "cpp",
+        "span": "cpp"
+    },
+    "code-runner.executorMap": {
+        "cpp": "cd $dir && g++ -std=c++23 $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt"
+    }
+}

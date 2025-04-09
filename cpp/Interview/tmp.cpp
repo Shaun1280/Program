@@ -1,127 +1,71 @@
-#include <iostream>
-#include <memory>  // For std::allocator
-#include <utility> // For std::move and std::forward
+#include <bits/stdc++.h>
 
-template <typename T> class Vector2 {
-  public:
-    using value_type = T;
-    using size_type = std::size_t;
-    using difference_type = std::ptrdiff_t;
-    using reference = value_type&;
-    using const_reference = const value_type&;
-    using pointer = value_type*;
-    using const_pointer = const value_type*;
+using namespace std;
 
-    struct Iterator {
-        pointer ptr;
-        Iterator(pointer ptr) : ptr(ptr) {}
-        Iterator& operator++() {
-            ++ptr;
-            return *this;
-        }
-        Iterator operator++(int) {
-            Iterator temp = *this;
-            ++ptr;
-            return temp;
-        }
-        reference operator*() { return *ptr; }
-    };
+#define debug(x) cerr << #x << " = " << x << endl
+#define boost ios::sync_with_stdio(false), cin.tie(0), cout.tie(0);
 
-    using iterator = Iterator;
-    using const_iterator = const Iterator;
-
-  public:
-    // Default constructor
-    Vector2() : m_data(nullptr), m_size(0), m_capacity(0) {}
-
-    // Destructor
-    ~Vector2() {
-        clear();
-        deallocate();
+#define error(args...)                           \
+    {                                            \
+        string _s = #args;                       \
+        replace(_s.begin(), _s.end(), ',', ' '); \
+        stringstream _ss(_s);                    \
+        istream_iterator<string> _it(_ss);       \
+        err(_it, args);                          \
     }
 
-    // Size and capacity
-    size_type size() const noexcept { return m_size; }
-    size_type capacity() const noexcept { return m_capacity; }
-    bool empty() const noexcept { return m_size == 0; }
+void err(istream_iterator<string> it) { cout << endl; }
 
-    // Access elements
-    reference operator[](size_type index) { return m_data[index]; }
-    const_reference operator[](size_type index) const { return m_data[index]; }
+template <typename T, typename... Args>
+void err(istream_iterator<string> it, T a, Args... args) {
+    cerr << *it << " = " << a << " ";
+    err(++it, args...);
+}
 
-    // Front and back
-    reference front() { return m_data[0]; }
-    const_reference front() const { return m_data[0]; }
+template <typename T>
+inline void read(T& x) {
+    x = 0;
+    T f = 1;
+    char ch = getchar();
+    while (!isdigit(ch)) f = (ch == '-') ? -1 : 1, ch = getchar();
+    while (isdigit(ch)) x = x * 10 + ch - 48, ch = getchar();
+    x *= f;
+}
 
-    reference back() { return m_data[m_size - 1]; }
-    const_reference back() const { return m_data[m_size - 1]; }
+template <typename T, typename... Args>
+inline void read(T& x, Args&... args) {
+    read(x), read(args...);
+}
 
-    // Iterators
-    iterator begin() noexcept { return m_data; }
-    const_iterator begin() const noexcept { return m_data; }
-    iterator end() noexcept { return m_data + m_size; }
-    const_iterator end() const noexcept { return m_data + m_size; }
+template <typename T>
+inline void write(T x) {
+    if (x < 0) putchar('-'), x = -x;
+    if (x >= 10) write(x / 10);
+    putchar(x % 10 + '0');
+}
 
-    // Push back
-    void push_back(const T& value) {
-        if (m_size >= m_capacity) {
-            reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
-        }
-        new (m_data + m_size) T(value);
-        ++m_size;
-    }
+template <typename T, typename... Args>
+inline void write(T& x, Args&... args) {
+    write(x), putchar('\n'), write(args...);
+}
 
-    void push_back(T&& value) {
-        if (m_size >= m_capacity) {
-            reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
-        }
-        new (m_data + m_size) T(std::move(value));
-        ++m_size;
-    }
+constexpr int MAXN = 1e5 + 5, MOD = 1e9 + 7;
 
-    // Emplace back
-    template <typename... Args> void emplace_back(Args&&... args) {
-        if (m_size >= m_capacity) {
-            reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
-        }
-        new (m_data + m_size) T(std::forward<Args>(args)...);
-        ++m_size;
-    }
+void solveOne(int ncase) {}
 
-    // Pop back
-    void pop_back() {
-        if (m_size == 0) {
-            throw std::out_of_range("Vector2<>::pop_back(): empty vector");
-        }
-        m_data[--m_size].~T();
-    }
-
-    // Clear
-    void clear() {
-        for (size_type i = 0; i < m_size; ++i) {
-            m_data[i].~T();
-        }
-        m_size = 0;
-    }
-
-  protected:
-    size_type m_size;
-    size_type m_capacity;
-    pointer m_data;
-
-    void deallocate() {
-        if (m_data) {
-            delte[] m_data;
-            m_data = nullptr;
-        }
-    }
-
-    void reallocate(size_type new_capacity) {
-        pointer new_data = static_cast<pointer>(
-            ::operator new(new_capacity * sizeof(value_type)));
-        std::unitialized_move(m_data, m_data + m_size, new_data);
-        deallocate();
-        m_data = new_data;
-        m_capacity = new_capacity;
-    }
-};
+int main() {
+    boost;
+    int testcase = 1;
+    // cin >> testcase;
+    array<int, 10> a{};
+    std::ranges::sort(a);
+    for (int i = 1; i <= testcase; i++) solveOne(i);
+    return 0;
+}
+/* stuff you should look for
+ * int overflow, array bounds
+ * special cases (n = 1?)
+ * do smth instead of nothing and stay organized
+ * WRITE STUFF DOWN
+ * DON'T GET STUCK ON ONE APPROACH
+ */
