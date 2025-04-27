@@ -15,7 +15,7 @@ class Any {
 
     template <typename T>
     struct Holder : HolderBase {
-        Holder(T value) : value_(value) {}
+        explicit Holder(T value) : value_(value) {}
         T value_;
     };
 
