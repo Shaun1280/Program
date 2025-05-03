@@ -1,0 +1,5 @@
+- shared_ptr, unique_ptr, weak_ptr, make_shared, make_unqiue all together
+- small vector
+- constexpr vary length bitset
+- sso
+- arbitray num of parameters
