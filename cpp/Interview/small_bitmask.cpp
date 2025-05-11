@@ -124,7 +124,7 @@ template <size_t N, typename StoredT>
 std::ostream& operator<<(std::ostream& os,
                          const SmallBitMask<N, StoredT>& mask) {
     os << "SmallBitMask<" << N << ", " << typeid(StoredT).name() << ">(";
-    for (size_t i = N - 1; i >= 0; --i) {
+    for (int i = N - 1; i >= 0; --i) {
         os << ((mask.test(i) ? '1' : '0'));
     }
     os << ")";
