@@ -4,3 +4,5 @@
 - sso
 - arbitray num of parameters
 - context (multithreading)
+- slow path fast path
+- move, forward (2 overloads)
