@@ -1,0 +1,90 @@
+# Industrial .clang-format configuration for C++ projects
+# Based on LLVM style with industrial-strength modifications
+# Suitable for CLion, VS Code, and CI/CD pipelines
+
+Language: Cpp
+BasedOnStyle: LLVM
+
+# Column settings
+ColumnLimit: 120                    # Industrial standard: 120 chars
+IndentWidth: 4                       # 4 spaces for indentation
+TabWidth: 4
+UseTab: Never                        # Spaces only - no tabs
+
+# Line breaks
+BreakBeforeBraces: Allman             # Braces on new lines (industrial standard)
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: false
+
+# Alignment for readability
+AlignConsecutiveAssignments: true      # Align = operators
+AlignConsecutiveDeclarations: true     # Align variable names
+AlignConsecutiveMacros: true           # Align macros
+AlignTrailingComments: true             # Align trailing comments
+AlignOperands: true                     # Align operands in expressions
+
+# Pointer and reference alignment
+PointerAlignment: Left                  # int* ptr (Left alignment)
+ReferenceAlignment: Left                # int& ref
+DerivePointerAlignment: false
+
+# Spaces
+SpaceBeforeParens: ControlStatements    # Space before ( in if/for/while
+SpaceInEmptyParentheses: false
+SpacesInAngles: false                    # No spaces in <T>
+SpacesInContainerLiterals: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceBeforeCpp11BracedList: false
+
+# Access modifiers
+AccessModifierOffset: -4                 # Access modifiers indented
+
+# Constructor initializers
+ConstructorInitializerIndentWidth: 4
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+BreakConstructorInitializers: BeforeColon
+
+# Namespaces
+FixNamespaceComments: true               # Add closing namespace comment
+NamespaceIndentation: None                # Don't indent namespace contents
+
+# Templates
+AlwaysBreakTemplateDeclarations: true
+AlignAfterOpenBracket: Align
+
+# Comments
+ReflowComments: true                      # Reflow comment lines
+CommentPragmas: '^ NOLINT:'                # Preserve NOLINT comments
+
+# Includes
+IncludeBlocks: Regroup                     # Regroup includes
+IncludeCategories:
+  - Regex: '^<.*\.h>$'                      # System headers
+    Priority: 1
+  - Regex: '^<.*>$'                          # Other system headers
+    Priority: 2
+  - Regex: '^".*\.h$"'                       # Project headers
+    Priority: 3
+IncludeIsMainRegex: '(Test)?$'               # Main include detection
+
+# Macros
+MacroBlockBegin: ''
+MacroBlockEnd: ''
+
+# Penalties for line breaking
+PenaltyExcessCharacter: 10
+PenaltyReturnTypeOnItsOwnLine: 60
+PenaltyBreakAssignment: 10
+PenaltyBreakBeforeFirstCallParameter: 30
+PenaltyBreakComment: 10
+PenaltyBreakFirstLessLess: 0
+PenaltyBreakString: 10
+PenaltyBreakTemplateDeclaration: 10
+
+# Sort includes
+SortIncludes: true
+SortUsingDeclarations: true
