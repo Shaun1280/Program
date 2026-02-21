@@ -1,5 +1,6 @@
+#pragma once
+
 #include <atomic>
-#include <iostream>
 
 template <typename T>
 class shared_ptr
@@ -69,29 +70,3 @@ private:
     T*                m_ptr;
     std::atomic<int>* m_ref_count;
 };
-
-int main()
-{
-    shared_ptr ptr1(new int(42));
-    shared_ptr<int> ptr2 = ptr1; // 拷贝构造
-
-    std::cout << "ptr1: " << *ptr1 << std::endl;
-    std::cout << "ptr2: " << *ptr2 << std::endl;
-
-    {
-        shared_ptr<int> ptr3 = std::move(ptr1); // 移动构造
-        std::cout << "ptr3: " << *ptr3 << std::endl;
-    }
-
-    // ptr1 现在为空，因为它的资源已经被移动到 ptr3 中
-    if (ptr1.use_count() == 0)
-    {
-        std::cout << "ptr1 is empty" << std::endl;
-    }
-
-    if (ptr2.use_count() == 0)
-    {
-        std::cout << "ptr2 is empty" << std::endl;
-    }
-    return 0;
-}
