@@ -60,7 +60,7 @@ public:
         m_ref_count.fetch_add(1, std::memory_order_relaxed);
     }
 
-    [[nodiscard]] bool decrement_shared() noexcept
+    bool decrement_shared() noexcept
     {
         if (m_ref_count.fetch_sub(1, std::memory_order_acq_rel) == 1)
         {
@@ -90,7 +90,7 @@ public:
     // They don't keep the object alive (unlike shared_ptr)
     // They do keep the control block alive
     // They allow checking if the object still exists via expired() or lock()
-    [[nodiscard]] bool decrement_weak() noexcept
+    bool decrement_weak() noexcept
     {
         if (m_weak_count.fetch_sub(1, std::memory_order_acq_rel) == 1)
         {
