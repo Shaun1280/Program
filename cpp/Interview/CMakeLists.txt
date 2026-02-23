@@ -11,6 +11,8 @@ add_executable(printer printer.cpp)
 set(SMART_POINTER_HEADERS
         smart_pointers/shared_ptr.hpp
         smart_pointers/control_block.hpp
+        smart_pointers/enable_shared_from_this.hpp
+        smart_pointers/weak_ptr.hpp
 )
 add_executable(smart_pointers
         smart_pointers/test.cpp
