@@ -19,7 +19,7 @@ AllowShortLoopsOnASingleLine: false
 AllowShortBlocksOnASingleLine: false
 
 # Alignment for readability
-AlignConsecutiveAssignments: true      # Align = operators
+AlignConsecutiveAssignments: false      # Align = operators
 AlignConsecutiveDeclarations: true     # Align variable names
 AlignConsecutiveMacros: true           # Align macros
 AlignTrailingComments: true             # Align trailing comments
