@@ -61,7 +61,7 @@ public:
 
     shared_ptr& operator=( const shared_ptr& other ) noexcept
     {
-        if ( this != other )
+        if ( this != &other )
         {
             release();
             m_ptr = other.m_ptr;
@@ -76,7 +76,7 @@ public:
 
     shared_ptr& operator=( shared_ptr&& other ) noexcept
     {
-        if ( this != other )
+        if ( this != &other )
         {
             release();
             m_ptr = std::exchange( other.m_ptr, nullptr );
