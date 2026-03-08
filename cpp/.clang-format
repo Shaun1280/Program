@@ -16,14 +16,14 @@ BreakBeforeBraces: Allman             # Braces on new lines (industrial standard
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
-AllowShortBlocksOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
 
 # Alignment for readability
 AlignConsecutiveAssignments: false      # Align = operators
-AlignConsecutiveDeclarations: true     # Align variable names
-AlignConsecutiveMacros: true           # Align macros
+AlignConsecutiveDeclarations: false     # Align variable names
+AlignConsecutiveMacros: false           # Align macros
 AlignTrailingComments: true             # Align trailing comments
-AlignOperands: true                     # Align operands in expressions
+AlignOperands: false                    # Align operands in expressions
 
 # Pointer and reference alignment
 PointerAlignment: Left                  # int* ptr (Left alignment)

@@ -184,6 +184,6 @@ private:
         }
     }
 
-    T*                    m_ptr{ nullptr };
+    T* m_ptr{ nullptr };
     shared_control_block* m_control_block{ nullptr };
 };
