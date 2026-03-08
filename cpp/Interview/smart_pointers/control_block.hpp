@@ -2,7 +2,6 @@
 
 #include <atomic>
 #include <concepts>
-#include <functional>
 #include <memory>
 
 template <typename T>
