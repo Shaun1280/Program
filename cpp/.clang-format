@@ -35,7 +35,7 @@ SpaceBeforeParens: ControlStatements    # Space before ( in if/for/while
 SpaceInEmptyParentheses: false
 SpacesInAngles: false                    # No spaces in <T>
 SpacesInContainerLiterals: false
-SpacesInParentheses: false
+SpacesInParentheses: true
 SpacesInSquareBrackets: false
 SpaceBeforeRangeBasedForLoopColon: true
 SpaceBeforeCpp11BracedList: false
