@@ -45,8 +45,9 @@ AccessModifierOffset: -4                 # Access modifiers indented
 
 # Constructor initializers
 ConstructorInitializerIndentWidth: 4
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
-BreakConstructorInitializers: BeforeColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+BreakConstructorInitializers: BeforeComma
+
 
 # Namespaces
 FixNamespaceComments: true               # Add closing namespace comment
