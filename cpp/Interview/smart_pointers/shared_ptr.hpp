@@ -179,8 +179,8 @@ private:
         if ( m_control_block )
         {
             m_control_block->decrement_shared();
-            m_ptr = nullptr;
             m_control_block = nullptr;
+            m_ptr = nullptr;
         }
     }
 
