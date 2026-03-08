@@ -14,10 +14,10 @@ set(SMART_POINTER_HEADERS
         smart_pointers/enable_shared_from_this.hpp
         smart_pointers/weak_ptr.hpp
 )
-add_executable(smart_pointers
+add_executable(smart_pointers_test
         smart_pointers/test.cpp
         ${SMART_POINTER_HEADERS}
 )
-target_include_directories(smart_pointers PRIVATE
+target_include_directories(smart_pointers_test PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/smart_pointers
 )
