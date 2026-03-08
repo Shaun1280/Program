@@ -20,14 +20,15 @@ class shared_control_block
 {
     struct DeleterHolderBase
     {
-        virtual ~DeleterHolderBase()  = default;
+        virtual ~DeleterHolderBase() = default;
         virtual void destroy( void* ) = 0;
     };
 
     template <typename T, typename Deleter>
     struct DeleterHolder final : DeleterHolderBase
     {
-        explicit DeleterHolder( Deleter&& d ) noexcept : m_deleter( std::forward<Deleter>( d ) )
+        explicit DeleterHolder( Deleter&& d ) noexcept
+            : m_deleter( std::forward<Deleter>( d ) )
         {
         }
 
@@ -42,10 +43,10 @@ class shared_control_block
 public:
     template <typename T, deleter_for<T> Deleter>
     explicit shared_control_block( T* ptr, Deleter&& deleter ) noexcept
-        : m_ptr( ptr ),
-          m_ref_count( 1 ),
-          m_weak_count( 0 ),
-          m_deleter( new DeleterHolder<T, Deleter>( std::forward<Deleter>( deleter ) ) )
+        : m_ptr( ptr )
+        , m_ref_count( 1 )
+        , m_weak_count( 0 )
+        , m_deleter( new DeleterHolder<T, Deleter>( std::forward<Deleter>( deleter ) ) )
     {
     }
 
@@ -104,6 +105,7 @@ public:
         return false;
     }
 
+    // Get the current number of shared_ptr instances managing the object
     [[nodiscard]] int use_count() const noexcept
     {
         return m_ref_count.load( std::memory_order_acquire );
