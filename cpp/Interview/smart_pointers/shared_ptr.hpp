@@ -17,6 +17,10 @@ public:
         // enable_shared_from_this_helper(ptr); TODO
     }
 
+    /*
+     * Two shared_ptr<T> objects with different deleters have the same type and can be assigned to each other.
+     * shared_ptr can change its deleter at runtime through assignment from anothershared_
+     */
     template <typename U, typename Deleter>
         requires std::is_convertible_v<U*, T*> && std::invocable<Deleter&, U*>
     shared_ptr( U* ptr, Deleter&& deleter )
