@@ -14,6 +14,7 @@ set(SMART_POINTER_HEADERS
         smart_pointers/enable_shared_from_this.hpp
         smart_pointers/weak_ptr.hpp
         smart_pointers/unique_ptr.hpp
+        smart_pointers/make_helpers.hpp
 )
 add_executable(smart_pointers_test
         smart_pointers/test.cpp
