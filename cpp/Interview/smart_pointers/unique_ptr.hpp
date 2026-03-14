@@ -86,11 +86,6 @@ public:
         return p;
     }
 
-    [[nodiscard]] constexpr Deleter& get_deleter() noexcept
-    {
-        return m_deleter;
-    }
-
     constexpr void reset( T* p = nullptr ) noexcept
     {
         auto old = m_ptr;
@@ -107,9 +102,42 @@ public:
         std::swap( m_deleter, other.m_deleter );
     }
 
+    // Observers
+    [[nodiscard]] constexpr auto get() const noexcept
+    {
+        return m_ptr;
+    }
+
+    [[nodiscard]] constexpr Deleter& get_deleter() noexcept
+    {
+        return m_deleter;
+    }
+
     [[nodiscard]] constexpr const Deleter& get_deleter() const noexcept
     {
         return m_deleter;
+    }
+
+    [[nodiscard]] constexpr explicit operator bool() const noexcept
+    {
+        return m_ptr != nullptr;
+    }
+
+    [[nodiscard]] constexpr T& operator*() const
+        requires( !std::is_void_v<T> )
+    {
+        return *m_ptr;
+    }
+
+    constexpr auto operator->() const noexcept
+    {
+        return m_ptr;
+    }
+
+    constexpr T& operator[]( std::size_t i ) const
+        requires std::is_array_v<T>
+    {
+        return m_ptr[i];
     }
 
 private:
