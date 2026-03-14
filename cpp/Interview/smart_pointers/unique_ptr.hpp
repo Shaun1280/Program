@@ -74,7 +74,7 @@ public:
     {
         if ( m_ptr )
         {
-            m_delete( m_ptr );
+            m_deleter( m_ptr );
         }
     }
 
