@@ -13,6 +13,7 @@ set(SMART_POINTER_HEADERS
         smart_pointers/control_block.hpp
         smart_pointers/enable_shared_from_this.hpp
         smart_pointers/weak_ptr.hpp
+        smart_pointers/unique_ptr.hpp
 )
 add_executable(smart_pointers_test
         smart_pointers/test.cpp

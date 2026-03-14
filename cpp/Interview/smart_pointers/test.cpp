@@ -1,6 +1,7 @@
 #include <iostream>
 #include <shared_ptr.hpp>
 #include <weak_ptr.hpp>
+#include <unique_ptr.hpp>
 
 int main()
 {
