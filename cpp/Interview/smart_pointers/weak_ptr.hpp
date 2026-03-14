@@ -92,9 +92,25 @@ public:
         std::swap( m_control_block, other.m_control_block );
     }
 
+    // Observers
+    [[nodiscard]] int use_count() const noexcept
+    {
+        return m_control_block ? m_control_block->use_count() : 0;
+    }
+
     [[nodiscard]] bool expired() const noexcept
     {
-        return m_control_block->use_count() == 0;
+        return use_count() == 0;
+    }
+
+    [[nodiscard]] std::shared_ptr<T> lock() const noexcept
+    {
+        return expired() ? std::shared_ptr<T>() : std::shared_ptr<T>( *this );
+    }
+
+    [[nodiscard]] bool contains() const noexcept
+    {
+        return !expired();
     }
 
 private:
