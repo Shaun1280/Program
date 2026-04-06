@@ -1,6 +1,7 @@
 #pragma once
 
 #include "weak_ptr.hpp"
+#include "enable_shared_from_this.hpp"
 
 template <typename T>
 class shared_ptr
@@ -14,7 +15,7 @@ public:
         : m_ptr( ptr )
         , m_control_block( ptr ? new shared_control_block( ptr, std::default_delete<U>() ) : nullptr )
     {
-        // enable_shared_from_this_helper(ptr); TODO
+        enable_shared_from_this_helper(ptr);
     }
 
     /*
@@ -27,7 +28,7 @@ public:
         : m_ptr( ptr )
         , m_control_block( ptr ? new shared_control_block( ptr, std::forward<Deleter>( deleter ) ) : nullptr )
     {
-        // enable_shared_from_this_helper(ptr); TODO
+        enable_shared_from_this_helper(ptr);
     }
 
     shared_ptr( shared_ptr& other ) noexcept
@@ -103,7 +104,7 @@ public:
         if ( ptr )
         {
             m_control_block = new shared_control_block( ptr, std::default_delete<U>() );
-            // enable_shared_from_this_helper(ptr); TODO
+            enable_shared_from_this_helper(ptr);
         }
     }
 
@@ -116,7 +117,7 @@ public:
         if ( ptr )
         {
             m_control_block = new shared_control_block( ptr, std::forward<Deleter>( deleter ) );
-            // enable_shared_from_this_helper(ptr); TODO
+            enable_shared_from_this_helper(ptr);
         }
     }
 
@@ -190,4 +191,16 @@ private:
 
     T* m_ptr{ nullptr };
     shared_control_block* m_control_block{ nullptr };
+
+    template <typename U>
+    void enable_shared_from_this_helper(U* ptr) noexcept
+    {
+        if constexpr (std::is_base_of_v<enable_shared_from_this<U>, U>)
+        {
+            if (ptr && ptr->m_weak_ptr.expired())
+            {
+                ptr->m_weak_ptr = *this; // assign shared_ptr to weak_ptr
+            }
+        }
+    }
 };
