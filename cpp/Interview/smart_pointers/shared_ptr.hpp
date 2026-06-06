@@ -195,7 +195,7 @@ private:
     template <typename U>
     void enable_shared_from_this_helper(U* ptr) noexcept
     {
-        if constexpr (std::is_base_of_v<enable_shared_from_this<U>, U>)
+        if constexpr (shared_from_this_enabled<U>)
         {
             if (ptr && ptr->m_weak_ptr.expired())
             {
