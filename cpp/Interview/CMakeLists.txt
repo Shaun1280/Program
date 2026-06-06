@@ -17,9 +17,16 @@ set(SMART_POINTER_HEADERS
         smart_pointers/make_helpers.hpp
 )
 add_executable(smart_pointers_test
-        smart_pointers/test.cpp
+        smart_pointers/test/test.cpp
         ${SMART_POINTER_HEADERS}
 )
 target_include_directories(smart_pointers_test PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/smart_pointers
 )
+add_executable(shared_ptr_enable_shared_from_test
+        smart_pointers/test/shared_ptr_enable_shared_from_test.cpp
+        ${SMART_POINTER_HEADERS}
+)
+target_include_directories(shared_ptr_enable_shared_from_test PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/smart_pointers)
+
