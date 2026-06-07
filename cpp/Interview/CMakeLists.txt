@@ -4,29 +4,10 @@ project(Interview LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_subdirectory(smart_pointers)
+
 # Printer executable
 add_executable(printer printer.cpp)
 
-# Smart pointers test executable
-set(SMART_POINTER_HEADERS
-        smart_pointers/shared_ptr.hpp
-        smart_pointers/control_block.hpp
-        smart_pointers/enable_shared_from_this.hpp
-        smart_pointers/weak_ptr.hpp
-        smart_pointers/unique_ptr.hpp
-        smart_pointers/make_helpers.hpp
-)
-add_executable(smart_pointers_test
-        smart_pointers/test/test.cpp
-        ${SMART_POINTER_HEADERS}
-)
-target_include_directories(smart_pointers_test PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/smart_pointers
-)
-add_executable(shared_ptr_enable_shared_from_test
-        smart_pointers/test/shared_ptr_enable_shared_from_test.cpp
-        ${SMART_POINTER_HEADERS}
-)
-target_include_directories(shared_ptr_enable_shared_from_test PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/smart_pointers)
+
 
