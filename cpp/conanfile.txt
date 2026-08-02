@@ -1,0 +1,13 @@
+[requires]
+# Add dependencies here if needed, e.g.:
+# fmt/10.0.0
+
+[generators]
+CMakeToolchain
+CMakeDeps
+
+[options]
+# Optional: package-specific options
+
+[imports]
+# Optional: copy files from packages
