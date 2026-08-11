@@ -1,0 +1,67 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 25,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/cmake-build-${presetName}",
+            "toolchainFile": "${sourceDir}/cmake-build-${presetName}/conan_toolchain.cmake",
+            "cacheVariables": {
+                "CMAKE_POLICY_DEFAULT_CMP0091": "NEW",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "debug",
+            "displayName": "Debug (Conan)",
+            "description": "Debug build using the Conan toolchain in build/debug",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "release",
+            "displayName": "Release (Conan)",
+            "description": "Release build using the Conan toolchain in build/release",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "debug",
+            "configurePreset": "debug",
+            "jobs": 16
+        },
+        {
+            "name": "release",
+            "configurePreset": "release",
+            "jobs": 16
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "debug",
+            "configurePreset": "debug",
+            "execution": {
+                "jobs": 16
+            }
+        },
+        {
+            "name": "release",
+            "configurePreset": "release",
+            "execution": {
+                "jobs": 16
+            }
+        }
+    ]
+}

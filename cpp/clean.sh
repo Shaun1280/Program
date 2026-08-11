@@ -8,7 +8,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-rm -rf "$SCRIPT_DIR/build" "$SCRIPT_DIR/Interview/build"
+rm -rf "$SCRIPT_DIR"/cmake-build-* "$SCRIPT_DIR"/Interview/cmake-build-* "$SCRIPT_DIR/build"
 rm -f "$SCRIPT_DIR/CMakeUserPresets.json" "$SCRIPT_DIR/Interview/CMakeUserPresets.json"
 
 echo ">> Cleaned."

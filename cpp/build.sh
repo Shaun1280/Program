@@ -36,7 +36,7 @@ export CXX="${CXX:-g++-15}"
 
 echo ">> Conan install ($CMAKE_BUILD_TYPE, $CXX)..."
 conan install . \
-    --output-folder="build/$BUILD_TYPE" \
+    --output-folder="cmake-build-$BUILD_TYPE" \
     --settings=build_type="$CMAKE_BUILD_TYPE" \
     --build=missing
 
@@ -46,4 +46,4 @@ cmake --preset "$BUILD_TYPE"
 echo ">> CMake build (preset: $BUILD_TYPE)..."
 cmake --build --preset "$BUILD_TYPE"
 
-echo ">> Done. Binaries are in build/$BUILD_TYPE/"
+echo ">> Done. Binaries are in cmake-build-$BUILD_TYPE/"

@@ -1,6 +1,8 @@
 ACM
 node_modules
 build
+cmake-build-*
+CMakeUserPresets.json
 data
 jpg
 Python_code/DICOM/*.pt

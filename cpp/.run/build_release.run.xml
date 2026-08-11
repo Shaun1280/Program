@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="build.sh release" type="ShConfigurationType">
+    <option name="SCRIPT_TEXT" value="" />
+    <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+    <option name="SCRIPT_PATH" value="$PROJECT_DIR$/build.sh" />
+    <option name="SCRIPT_OPTIONS" value="release" />
+    <option name="INDEPENDENT_WORKING_DIRECTORY" value="true" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="PARENT_ENVS" value="true" />
+    <option name="PASS_PARENT_ENVS" value="true" />
+    <method v="2" />
+  </configuration>
+</component>
