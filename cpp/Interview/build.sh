@@ -35,9 +35,12 @@ export CC="${CC:-gcc-15}"
 export CXX="${CXX:-g++-15}"
 
 echo ">> Conan install ($CMAKE_BUILD_TYPE, $CXX)..."
+# user_presets="": don't emit CMakeUserPresets.json. Its conan-* presets share
+# build dirs with ours, and CLion rejects two profiles using one directory.
 conan install . \
     --output-folder="cmake-build-$BUILD_TYPE" \
     --settings=build_type="$CMAKE_BUILD_TYPE" \
+    --conf=tools.cmake.cmaketoolchain:user_presets="" \
     --build=missing
 
 echo ">> CMake configure (preset: $BUILD_TYPE)..."
