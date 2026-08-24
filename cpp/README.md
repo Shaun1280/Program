@@ -10,13 +10,13 @@ pixi.toml / pixi.lock   toolchain + dependency definition (lock file is committe
 CMakePresets.json       debug / release configure, build and test presets
 devtools/build.sh       one-shot CLI build (works from any shell)
 devtools/clean.sh       remove all CMake build output
-devtools/setenv.sh      source to activate the pixi env in your current shell
+devtools/setup.sh       source to activate the pixi env in your current shell
 .vscode/                editor config (cmake/clangd paths, recommended extensions)
 ```
 
-The `Interview/` subdirectory is also a **standalone project** with the same
-layout (its own `pixi.toml`, presets, `devtools/`) — everything below applies
-equally when working inside `Interview/` directly.
+Everything is built from this directory (the "global" workspace); subprojects
+like `Interview/` and `WeeklyCPP/` are added via `add_subdirectory` and share
+the single pixi environment and CMake presets defined here.
 
 ---
 
@@ -54,18 +54,22 @@ Binaries land in `cmake-build-<config>/` (e.g.
 
 ### Activating the environment in your shell
 
-For ad-hoc work (direct `cmake`/`ctest`/g++ calls), source `setenv.sh` once
+For ad-hoc work (direct `cmake`/`ctest`/g++ calls), source `setup.sh` once
 per shell — pixi's equivalent of `conda activate`:
 
 ```bash
-source devtools/setenv.sh
+source devtools/setup.sh
 cmake --preset debug && ctest --preset debug
 ```
 
 It runs `pixi shell-hook` (PATH, `CONDA_PREFIX`, `PIXI_*`) and additionally
 exports `CC`/`CXX` pointing at the conda gcc, so even preset-less cmake
 invocations use the pixi toolchain. Open a new shell to deactivate.
-Handy alias: `alias cppenv='source ~/dev/Program/cpp/devtools/setenv.sh'`.
+Handy alias: `alias cppenv='source ~/dev/Program/cpp/devtools/setup.sh'`.
+
+Note the asymmetry: `setup.sh` must be **sourced**, `build.sh` must be
+**executed** (it re-runs itself as a child process if sourced by mistake,
+so it can't kill your terminal).
 
 ## 3. Run tests
 
@@ -106,21 +110,7 @@ ctest --preset debug      # or: pixi run test-debug
 No manual configuration is needed: `.vscode/settings.json` points cmake and
 clangd at the pixi environment by absolute path.
 
-## 5. Standalone Interview project
-
-`Interview/` mirrors the root setup, so it can be opened on its own:
-
-```bash
-cd cpp/Interview
-./devtools/build.sh debug   # uses Interview/pixi.toml and Interview/.pixi
-code .                      # or open the Interview folder directly in VSCode
-```
-
-Building from the root workspace builds Interview's targets as subdirectories;
-both entry points share nothing, so build dirs never collide
-(`cpp/cmake-build-*` vs `cpp/Interview/cmake-build-*`).
-
-## 6. Adding a dependency
+## 5. Adding a dependency
 
 ```bash
 pixi add <package>      # from conda-forge, e.g. `pixi add boost`
@@ -153,7 +143,7 @@ automatically — commit it.
 | Symptom | Fix |
 | --- | --- |
 | Weird cache errors after pulling preset changes | `devtools/clean.sh`, then rebuild |
-| Want a fully fresh toolchain | `rm -rf .pixi Interview/.pixi`, then `devtools/build.sh` |
+| Want a fully fresh toolchain | `rm -rf .pixi`, then `devtools/build.sh` |
 | clangd shows stale errors | Command Palette → "clangd: Restart language server" |
 | clangd can't find new build dir | it reads the **debug** compile DB; build debug once |
 | `cmake --preset` fails outside pixi | presets need `.pixi/envs/default` to exist — run `devtools/build.sh` once |

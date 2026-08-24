@@ -9,6 +9,15 @@
 #
 # VSCode: run this once, then pick the "debug" / "release" configure preset
 # in CMake Tools and build from the editor.
+#
+# NOTE: execute this script, do NOT source it (use setup.sh for that).
+
+# If sourced, re-run as a child process: the `exec` and `set -e` below would
+# otherwise replace/kill the calling login shell, closing the terminal.
+if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
+    bash "${BASH_SOURCE[0]}" "$@"
+    return $?
+fi
 
 set -euo pipefail
 

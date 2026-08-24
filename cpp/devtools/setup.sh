@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Activate this project's pixi environment in the CURRENT shell:
 #
-#   source devtools/setenv.sh
+#   source devtools/setup.sh
 #
 # Afterwards cmake, ninja, clangd and the conda gcc are on PATH, and
 # CONDA_PREFIX / CC / CXX point into the pixi env — so plain
 # `cmake --preset debug`, `ctest --preset debug`, or ad-hoc g++ calls
 # all use the pixi toolchain. Deactivate by opening a new shell.
 #
-# Handy alias:  alias cppenv='source ~/dev/Program/cpp/devtools/setenv.sh'
+# Handy alias:  alias cppenv='source ~/dev/Program/cpp/devtools/setup.sh'
 
 # Must be sourced, not executed.
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
