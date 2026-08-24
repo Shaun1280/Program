@@ -13,7 +13,6 @@
         "--query-driver=${workspaceFolder}/.pixi/envs/default/bin/x86_64-conda-linux-gnu-*"
     ],
     // cpptools is only kept for its gdb debugger backend; clangd does IntelliSense.
-    "C_Cpp.intelliSenseEngine": "disabled",
     "cmake.debugConfig": {
         "MIMode": "gdb",
         "miDebuggerPath": "/usr/bin/gdb"
