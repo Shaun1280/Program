@@ -3,6 +3,7 @@ node_modules
 build
 cmake-build-*
 CMakeUserPresets.json
+.pixi/
 data
 jpg
 Python_code/DICOM/*.pt

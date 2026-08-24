@@ -1,3 +1,21 @@
 {
-    "cmake.sourceDirectory": "/home/shaun/Desktop/VSC_WORKSPACE/Program/cpp/Template"
+    // CMake Tools: use the pixi-provided cmake and always go through
+    // CMakePresets.json (the presets themselves point at the pixi gcc,
+    // ninja and gtest by absolute path, so no shell activation is needed).
+    "cmake.cmakePath": "${workspaceFolder}/.pixi/envs/default/bin/cmake",
+    "cmake.useCMakePresets": "always",
+    // clangd (from the pixi env) provides IntelliSense. compile_commands.json
+    // is exported into cmake-build-debug by the presets; --query-driver lets
+    // clangd probe the conda gcc for its system include paths.
+    "clangd.path": "${workspaceFolder}/.pixi/envs/default/bin/clangd",
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/cmake-build-debug",
+        "--query-driver=${workspaceFolder}/.pixi/envs/default/bin/x86_64-conda-linux-gnu-*"
+    ],
+    // cpptools is only kept for its gdb debugger backend; clangd does IntelliSense.
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "cmake.debugConfig": {
+        "MIMode": "gdb",
+        "miDebuggerPath": "/usr/bin/gdb"
+    }
 }
