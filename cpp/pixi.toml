@@ -10,8 +10,11 @@ cmake = ">=3.30"
 ninja = "*"
 # C++ dependencies (replaces Conan)
 gtest = ">=1.17"
-# Editor tooling for VSCode (clangd)
+# Editor tooling for VSCode (clangd). The full clang package is needed for
+# clang's resource headers (lib/clang/*/include/stddef.h etc.), which the
+# bare clang-tools package omits and clangd requires.
 clang-tools = "*"
+clang = "*"
 
 [tasks]
 build-debug = "bash devtools/build.sh debug"
