@@ -20,11 +20,8 @@ _DEVTOOLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 _PROJECT_ROOT="$(dirname "$_DEVTOOLS_DIR")"
 _PIXI="${PIXI:-$HOME/.pixi/bin/pixi}"
 
-# Install the environment on first use.
-if [[ ! -d "$_PROJECT_ROOT/.pixi/envs/default" ]]; then
-    echo ">> pixi environment not found, installing..."
-    "$_PIXI" install --manifest-path "$_PROJECT_ROOT/pixi.toml" || return 1
-fi
+
+"$_PIXI" install --manifest-path "$_PROJECT_ROOT/pixi.toml" || return 1
 
 # pixi's shell-hook is the equivalent of `conda activate` (sets PATH,
 # CONDA_PREFIX, PIXI_* and runs package activation scripts).
