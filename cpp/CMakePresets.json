@@ -35,6 +35,19 @@
             }
         },
         {
+            "name": "debug-clang",
+            "displayName": "Debug Clang (pixi)",
+            "description": "Debug build with Clang (required for WeeklyCPP reflection examples)",
+            "inherits": "base",
+            "environment": {
+                "CC": "${sourceDir}/.pixi/envs/default/bin/clang-22",
+                "CXX": "${sourceDir}/.pixi/envs/default/bin/clang++-22"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
             "name": "release",
             "displayName": "Release (pixi)",
             "description": "Release build using the pixi environment in .pixi/",
@@ -48,6 +61,11 @@
         {
             "name": "debug",
             "configurePreset": "debug",
+            "jobs": 16
+        },
+        {
+            "name": "debug-clang",
+            "configurePreset": "debug-clang",
             "jobs": 16
         },
         {
