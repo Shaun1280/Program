@@ -94,5 +94,56 @@ int main()
     location loc{ .x = 1, .y = 5 };
     return 0;
 }
+```
 
+```cpp
+template <std::size_t Len>
+struct static_string
+{
+    char data[Len];
+
+    consteval static_string( const char ( &input )[Len] )
+    {
+        std::copy( std::begin( input ), std::end( input ), std::begin( data ) );
+    }
+
+    constexpr const char* c_str() const { return data; }
+};
+
+/*
+static_string<6> s1("Hello");  // OK '\0'
+static_string<5> s1("Hello");  // Wrong
+sizeof("Hello) 6
+*/
+
+template <static_string Name, typename T>
+struct pair
+{
+    using type = T;
+    static constexpr auto key = Name;
+};
+
+template <pair... Names>
+consteval auto named_tuple()
+{
+    struct tuple;
+
+    consteval {
+        std::vector<std::meta::info> members = {
+            std::meta::data_member_spec(
+                ^^typename decltype(Names)::type, { .name = Names.key.data }
+            )... // pack expansion, not fold expansion
+        }
+        std::meta::define_aggregate(^^tuple, members);
+    }
+
+    return tuple{};
+}
+
+int main()
+{
+    auto nt = named_tuple<pair<"item1", int>{}, pair<"item2", double>{}>();
+    nt.item1 = 42;
+    return nt.item1;
+}
 ```
