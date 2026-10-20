@@ -17,6 +17,7 @@ find_package(Threads REQUIRED)
 add_subdirectory(smart_pointers)
 add_subdirectory(trading_system_notes)
 add_subdirectory(lock_free)
+add_subdirectory(template_meta_programming)
 
 # Printer executable
 add_executable(printer printer.cpp)
