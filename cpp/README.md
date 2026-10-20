@@ -98,12 +98,10 @@ ctest --preset debug      # or: pixi run test-debug
      IntelliSense is disabled in `.vscode/settings.json` so it won't conflict
      with clangd)
 
-3. **Configure & build:** pick the `debug` or `release` configure preset in
-   the bottom status bar, or `Ctrl+Shift+P` + `CMake: Select Configure Preset` (CMake Tools reads `CMakePresets.json` automatically),
+3. **Configure & build:** `Ctrl+Shift+P` + `CMake: Select Configure Preset` (CMake Tools reads `CMakePresets.json` automatically),
    then build with **F7**.
 
-4. **Run/debug tests:** Testing sidebar (populated from ctest), or the 🐞
-   button in the CMake Tools status bar to debug the selected target with gdb.
+4. **Run/debug tests:** `Ctrl+Shift+P` + `CMake: Set Launch/Debug Target`.
    **F5** builds & debugs the currently open file as a standalone program
    (uses the pixi g++).
 

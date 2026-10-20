@@ -15,7 +15,7 @@ enable_testing()
 find_package(Threads REQUIRED)
 
 # Template meta programming test executable
-set(TEMPLATE_META_PROGRAMMING_HEADERS key_arg_type_match.hpp)
+set(TEMPLATE_META_PROGRAMMING_HEADERS tuple_elems_func_args_match.hpp)
 add_executable(template_meta_programming_test
         test/test.cpp
         ${TEMPLATE_META_PROGRAMMING_HEADERS}
