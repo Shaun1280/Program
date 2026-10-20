@@ -99,7 +99,7 @@ ctest --preset debug      # or: pixi run test-debug
      with clangd)
 
 3. **Configure & build:** pick the `debug` or `release` configure preset in
-   the bottom status bar (CMake Tools reads `CMakePresets.json` automatically),
+   the bottom status bar, or `Ctrl+Shift+P` + `CMake: Select Configure Preset` (CMake Tools reads `CMakePresets.json` automatically),
    then build with **F7**.
 
 4. **Run/debug tests:** Testing sidebar (populated from ctest), or the 🐞

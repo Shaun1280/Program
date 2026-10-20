@@ -144,6 +144,10 @@ int main()
 {
     auto nt = named_tuple<pair<"item1", int>{}, pair<"item2", double>{}>();
     nt.item1 = 42;
-    return nt.item1;
+    
+    auto nt2 = named_tupe2<"item1", "item2">{ 2, 4.5 };
+    nt2.item1 = 43;
+
+    return 0;
 }
 ```
